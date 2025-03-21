@@ -1,11 +1,12 @@
-
 import React, { useState } from 'react';
 import VacancyCard, { VacancyProps } from './VacancyCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus, Filter } from 'lucide-react';
+import { Search, Plus, Filter, Briefcase, Clock } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 interface VacancyListProps {
   vacancies: VacancyProps[];
@@ -128,9 +129,5 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
     </div>
   );
 };
-
-// Import necessary components
-import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 
 export default VacancyList;

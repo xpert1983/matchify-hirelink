@@ -1,11 +1,12 @@
-
 import React, { useState } from 'react';
 import CandidateCard, { CandidateProps } from './CandidateCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus, Filter } from 'lucide-react';
+import { Search, Plus, Filter, MapPin, Briefcase, GraduationCap, Mail, Phone } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 interface CandidateListProps {
   candidates: CandidateProps[];
@@ -152,9 +153,5 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
     </div>
   );
 };
-
-// Import necessary components
-import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 
 export default CandidateList;

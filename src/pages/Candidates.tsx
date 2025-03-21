@@ -3,8 +3,15 @@ import React from 'react';
 import Layout from '@/components/layout/Layout';
 import CandidateList from '@/components/candidates/CandidateList';
 import { candidatesData } from '@/lib/data';
+import { CandidateProps } from '@/components/candidates/CandidateCard';
 
 const Candidates = () => {
+  // Convert candidatesData to match CandidateProps type
+  const typedCandidates: CandidateProps[] = candidatesData.map(candidate => ({
+    ...candidate,
+    status: candidate.status as "Available" | "Interviewing" | "Hired" | "Not Available"
+  }));
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -13,7 +20,7 @@ const Candidates = () => {
           <p className="text-muted-foreground mt-1">Manage and track potential hires.</p>
         </div>
         
-        <CandidateList candidates={candidatesData} />
+        <CandidateList candidates={typedCandidates} />
       </div>
     </Layout>
   );

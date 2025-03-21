@@ -3,8 +3,15 @@ import React from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
 import { vacanciesData } from '@/lib/data';
+import { VacancyProps } from '@/components/vacancies/VacancyCard';
 
 const Vacancies = () => {
+  // Convert vacanciesData to match VacancyProps type
+  const typedVacancies: VacancyProps[] = vacanciesData.map(vacancy => ({
+    ...vacancy,
+    type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote"
+  }));
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -13,7 +20,7 @@ const Vacancies = () => {
           <p className="text-muted-foreground mt-1">Manage and track your open positions.</p>
         </div>
         
-        <VacancyList vacancies={vacanciesData} />
+        <VacancyList vacancies={typedVacancies} />
       </div>
     </Layout>
   );
