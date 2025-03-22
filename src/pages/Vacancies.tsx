@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
+import VacancyDetail from '@/components/vacancies/VacancyDetail';
+import VacancyFilters from '@/components/vacancies/VacancyFilters';
+import VacancyBulkActions from '@/components/vacancies/VacancyBulkActions';
+import VacancyAnalytics from '@/components/analytics/VacancyAnalytics';
+import InterviewCalendar from '@/components/calendar/InterviewCalendar';
+import ImportExportData from '@/components/common/ImportExportData';
 import { vacanciesData } from '@/lib/data';
 import { VacancyProps } from '@/components/vacancies/VacancyCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, Search, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import VacancyDetail from '@/components/vacancies/VacancyDetail';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
+// Интерфейс с расширенными свойствами для VacancyDetail
 interface ExtendedVacancyProps extends VacancyProps {
   requirements?: string[];
   responsibilities?: string[];
@@ -24,45 +32,152 @@ const Vacancies = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [salaryRange, setSalaryRange] = useState<[number, number]>([30000, 250000]);
+  const [experienceLevel, setExperienceLevel] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const params = new URLSearchParams(location.search);
   const vacancyId = params.get('id');
 
+  // Mock data for interviews
+  const interviewsData = [
+    {
+      id: '1',
+      candidateName: 'Анна Смирнова',
+      vacancyTitle: 'Frontend Developer',
+      date: new Date(),
+      time: '15:00',
+      location: 'Google Meet',
+      status: 'scheduled' as const
+    },
+    {
+      id: '2',
+      candidateName: 'Иван Петров',
+      vacancyTitle: 'UX Designer',
+      date: new Date(Date.now() + 86400000), // завтра
+      time: '11:30',
+      location: 'Офис, переговорная #2',
+      status: 'scheduled' as const
+    },
+    {
+      id: '3',
+      candidateName: 'Мария Иванова',
+      vacancyTitle: 'Product Manager',
+      date: new Date(Date.now() + 172800000), // послезавтра
+      time: '14:00',
+      location: 'Zoom',
+      status: 'scheduled' as const
+    }
+  ];
+
+  // Mock data for analytics
+  const analyticsData = {
+    applicantsByVacancy: [
+      { name: 'Frontend Developer', value: 42, color: '#4F46E5' },
+      { name: 'UX Designer', value: 28, color: '#06B6D4' },
+      { name: 'Product Manager', value: 35, color: '#8B5CF6' },
+      { name: 'Backend Developer', value: 31, color: '#10B981' },
+      { name: 'DevOps Engineer', value: 18, color: '#F59E0B' }
+    ],
+    applicationsByDay: [
+      { date: '01/06', applications: 5 },
+      { date: '02/06', applications: 7 },
+      { date: '03/06', applications: 3 },
+      { date: '04/06', applications: 8 },
+      { date: '05/06', applications: 12 },
+      { date: '06/06', applications: 10 },
+      { date: '07/06', applications: 6 }
+    ],
+    conversionRates: [
+      { stage: 'Просмотр', rate: 100, color: '#4F46E5' },
+      { stage: 'Отклик', rate: 38, color: '#06B6D4' },
+      { stage: 'Интервью', rate: 24, color: '#8B5CF6' },
+      { stage: 'Оффер', rate: 12, color: '#10B981' },
+      { stage: 'Найм', rate: 8, color: '#F59E0B' }
+    ],
+    vacanciesByDepartment: [
+      { department: 'Разработка', count: 12, color: '#4F46E5' },
+      { department: 'Дизайн', count: 5, color: '#06B6D4' },
+      { department: 'Маркетинг', count: 8, color: '#8B5CF6' },
+      { department: 'Продажи', count: 7, color: '#10B981' },
+      { department: 'HR', count: 3, color: '#F59E0B' }
+    ]
+  };
+
+  // Расширяем вакансии дополнительными свойствами
   const typedVacancies: ExtendedVacancyProps[] = vacanciesData.map(vacancy => ({
     ...vacancy,
     type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote",
-    postedDate: vacancy.posted
+    postedDate: vacancy.posted,
+    status: Math.random() > 0.7 ? 'paused' : Math.random() > 0.4 ? 'active' : Math.random() > 0.2 ? 'closed' : 'draft',
+    department: ['Разработка', 'Дизайн', 'Маркетинг', 'Продажи', 'HR'][Math.floor(Math.random() * 5)],
+    experienceRequired: ['Нет опыта', 'От 1 года', 'От 3 лет', 'От 5 лет'][Math.floor(Math.random() * 4)],
+    selected: selectedIds.includes(vacancy.id)
   }));
 
   const selectedVacancy = vacancyId 
     ? typedVacancies.find(v => v.id === vacancyId) 
     : null;
 
-  const filteredVacancies = typedVacancies.filter(vacancy => {
-    const matchesSearch = vacancy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  // Получаем уникальные навыки из всех вакансий
+  const allSkills = Array.from(
+    new Set(typedVacancies.flatMap(v => v.skills))
+  );
+
+  // Функция фильтрации вакансий
+  const filterVacancies = (vacancies: ExtendedVacancyProps[]) => {
+    return vacancies.filter(vacancy => {
+      const matchesSearch = vacancy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           vacancy.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           vacancy.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesType = filterType === 'all' ? true : vacancy.type === filterType;
-    
-    return matchesSearch && matchesType;
-  });
+      
+      const matchesType = filterType === 'all' ? true : vacancy.type === filterType;
+      
+      // Фильтрация по зарплате (преобразуем строку зарплаты в число)
+      const salaryString = vacancy.salary.replace(/[^\d]/g, '');
+      const salary = parseInt(salaryString, 10);
+      const matchesSalary = isNaN(salary) ? true : (salary >= salaryRange[0] && salary <= salaryRange[1]);
+      
+      // Фильтрация по опыту работы
+      const matchesExperience = experienceLevel.length === 0 ? true : 
+        experienceLevel.includes(vacancy.experienceRequired || '');
+      
+      // Фильтрация по навыкам
+      const matchesSkills = selectedSkills.length === 0 ? true :
+        selectedSkills.every(skill => vacancy.skills.includes(skill));
+      
+      return matchesSearch && matchesType && matchesSalary && matchesExperience && matchesSkills;
+    });
+  };
 
-  const sortedVacancies = [...filteredVacancies].sort((a, b) => {
-    if (sortBy === 'newest') {
-      return new Date(b.posted).getTime() - new Date(a.posted).getTime();
-    } else if (sortBy === 'oldest') {
-      return new Date(a.posted).getTime() - new Date(b.posted).getTime();
-    } else if (sortBy === 'applicants-high') {
-      return b.applicants - a.applicants;
-    } else if (sortBy === 'applicants-low') {
-      return a.applicants - b.applicants;
-    }
-    return 0;
-  });
+  // Функция сортировки вакансий
+  const sortVacancies = (vacancies: ExtendedVacancyProps[]) => {
+    return [...vacancies].sort((a, b) => {
+      if (sortBy === 'newest') {
+        return new Date(b.posted).getTime() - new Date(a.posted).getTime();
+      } else if (sortBy === 'oldest') {
+        return new Date(a.posted).getTime() - new Date(b.posted).getTime();
+      } else if (sortBy === 'applicants-high') {
+        return b.applicants - a.applicants;
+      } else if (sortBy === 'applicants-low') {
+        return a.applicants - b.applicants;
+      } else if (sortBy === 'salary-high' || sortBy === 'salary-low') {
+        const salaryA = parseInt(a.salary.replace(/[^\d]/g, ''), 10) || 0;
+        const salaryB = parseInt(b.salary.replace(/[^\d]/g, ''), 10) || 0;
+        return sortBy === 'salary-high' ? salaryB - salaryA : salaryA - salaryB;
+      }
+      return 0;
+    });
+  };
+
+  // Применение фильтров и сортировки
+  const filteredVacancies = filterVacancies(typedVacancies);
+  const sortedVacancies = sortVacancies(filteredVacancies);
 
   const handleViewVacancy = (id: string) => {
     navigate(`/vacancies?id=${id}`);
@@ -70,6 +185,50 @@ const Vacancies = () => {
 
   const handleBackToList = () => {
     navigate('/vacancies');
+  };
+
+  const handleVacancySelect = (id: string, selected: boolean) => {
+    if (selected) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(itemId => itemId !== id));
+    }
+  };
+
+  const handleSelectAll = () => {
+    setSelectedIds(sortedVacancies.map(v => v.id));
+  };
+
+  const handleClearSelection = () => {
+    setSelectedIds([]);
+  };
+
+  const handleAddInterview = () => {
+    toast.info('Функция добавления собеседования находится в разработке');
+  };
+
+  const handleExportData = () => {
+    return sortedVacancies;
+  };
+
+  const handleImportData = (data: any) => {
+    console.log('Импортированные данные:', data);
+    toast.success(`Импортировано ${data.length} вакансий`);
+  };
+
+  const applyFilters = () => {
+    // Просто перезапустим фильтрацию
+    toast.success('Фильтры применены');
+  };
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setFilterType('all');
+    setSortBy('newest');
+    setSalaryRange([30000, 250000]);
+    setExperienceLevel([]);
+    setSelectedSkills([]);
+    toast.info('Фильтры сброшены');
   };
 
   const isDetailView = !!selectedVacancy;
@@ -100,65 +259,77 @@ const Vacancies = () => {
                 <h1 className="text-3xl font-bold tracking-tight">Вакансии</h1>
                 <p className="text-muted-foreground mt-1">Управление и отслеживание ваших открытых позиций.</p>
               </div>
-              <Button className="bg-primary hover:bg-primary/90 text-white self-start sm:self-auto">
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить вакансию
-              </Button>
-            </div>
-            
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="relative w-full md:w-96">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input 
-                  placeholder="Поиск вакансий..." 
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+              <div className="flex items-center gap-2">
+                <ImportExportData 
+                  entityType="vacancies"
+                  onExport={handleExportData}
+                  onImport={handleImportData}
                 />
-              </div>
-              
-              <div className="flex items-center gap-2 w-full md:w-auto">
-                <Select 
-                  value={filterType} 
-                  onValueChange={setFilterType}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Все вакансии" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Все типы</SelectItem>
-                    <SelectItem value="Full-time">Полная занятость</SelectItem>
-                    <SelectItem value="Part-time">Частичная занятость</SelectItem>
-                    <SelectItem value="Contract">Контракт</SelectItem>
-                    <SelectItem value="Remote">Удаленно</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Select 
-                  value={sortBy} 
-                  onValueChange={setSortBy}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Сортировка" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="newest">Сначала новые</SelectItem>
-                    <SelectItem value="oldest">Сначала старые</SelectItem>
-                    <SelectItem value="applicants-high">Больше откликов</SelectItem>
-                    <SelectItem value="applicants-low">Меньше откликов</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Button variant="outline" size="icon" className="h-10 w-10">
-                  <Filter className="h-4 w-4" />
+                <Button className="bg-primary hover:bg-primary/90 text-white">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить вакансию
                 </Button>
               </div>
             </div>
             
-            <VacancyList 
-              vacancies={sortedVacancies} 
-              onViewVacancy={handleViewVacancy}
-            />
+            <Tabs defaultValue="list" value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="mb-6">
+                <TabsTrigger value="list">Список вакансий</TabsTrigger>
+                <TabsTrigger value="analytics">Аналитика</TabsTrigger>
+                <TabsTrigger value="calendar">Календарь собеседований</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="list" className="space-y-6 animate-fade-in">
+                <VacancyFilters 
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  filterType={filterType}
+                  setFilterType={setFilterType}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  salaryRange={salaryRange}
+                  setSalaryRange={setSalaryRange}
+                  experienceLevel={experienceLevel}
+                  setExperienceLevel={setExperienceLevel}
+                  selectedSkills={selectedSkills}
+                  setSelectedSkills={setSelectedSkills}
+                  applyFilters={applyFilters}
+                  resetFilters={resetFilters}
+                  availableSkills={allSkills}
+                />
+                
+                <Separator />
+                
+                <VacancyBulkActions 
+                  selectedIds={selectedIds}
+                  onSelectAll={handleSelectAll}
+                  onClearSelection={handleClearSelection}
+                  totalCount={sortedVacancies.length}
+                  selectionCount={selectedIds.length}
+                />
+                
+                <VacancyList 
+                  vacancies={sortedVacancies.map(v => ({
+                    ...v,
+                    selected: selectedIds.includes(v.id)
+                  }))}
+                  onViewVacancy={handleViewVacancy}
+                  onSelectVacancy={handleVacancySelect}
+                  selectable={true}
+                />
+              </TabsContent>
+              
+              <TabsContent value="analytics" className="animate-fade-in">
+                <VacancyAnalytics data={analyticsData} />
+              </TabsContent>
+              
+              <TabsContent value="calendar" className="animate-fade-in">
+                <InterviewCalendar 
+                  interviews={interviewsData}
+                  onAddInterview={handleAddInterview}
+                />
+              </TabsContent>
+            </Tabs>
           </>
         )}
       </div>

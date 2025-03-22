@@ -9,9 +9,16 @@ import { Briefcase, Clock, Filter, MapPin, Plus, Search } from 'lucide-react';
 interface VacancyListProps {
   vacancies: VacancyProps[];
   onViewVacancy?: (id: string) => void;
+  onSelectVacancy?: (id: string, selected: boolean) => void;
+  selectable?: boolean;
 }
 
-export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onViewVacancy }) => {
+export const VacancyList: React.FC<VacancyListProps> = ({ 
+  vacancies, 
+  onViewVacancy,
+  onSelectVacancy,
+  selectable = false
+}) => {
   const [selectedVacancy, setSelectedVacancy] = useState<VacancyProps | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -24,6 +31,12 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onViewVacan
         setSelectedVacancy(vacancy);
         setIsDialogOpen(true);
       }
+    }
+  };
+
+  const handleSelectVacancy = (id: string, selected: boolean) => {
+    if (onSelectVacancy) {
+      onSelectVacancy(id, selected);
     }
   };
 
@@ -51,6 +64,8 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onViewVacan
               key={vacancy.id} 
               vacancy={vacancy} 
               onView={handleViewVacancy}
+              onSelect={handleSelectVacancy}
+              selectable={selectable}
             />
           ))}
         </div>
