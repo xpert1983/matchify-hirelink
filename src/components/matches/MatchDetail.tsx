@@ -1,186 +1,209 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Calendar, MapPin, Mail, Phone, Building, GraduationCap, Briefcase, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  Calendar, 
+  CircleCheck, 
+  Clock, 
+  FileText, 
+  User, 
+  Users, 
+  Mail, 
+  Phone, 
+  MapPin,
+  X 
+} from 'lucide-react';
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import { matchesData, candidatesData, vacanciesData } from "@/lib/data";
 
-interface MatchDetailProps {
+export interface MatchDetailProps {
   matchId: string;
+  onClose?: () => void;
 }
 
-interface Match {
-  id: string;
-  candidate: {
-    name: string;
-    title: string;
-    avatar: string;
-    location: string;
-    email: string;
-    phone: string;
-    company: string;
-    education: string;
-    experience: string;
-  };
-  vacancy: {
-    title: string;
-    company: string;
-    location: string;
-    department: string;
-    type: string;
-  };
-  score: number;
-  status: string;
-  date: string;
-  notes: string;
-}
+const MatchDetail: React.FC<MatchDetailProps> = ({ matchId, onClose }) => {
+  const [matchData, setMatchData] = useState<any>(null);
+  const [candidate, setCandidate] = useState<any>(null);
+  const [vacancy, setVacancy] = useState<any>(null);
 
-const MatchDetail: React.FC<MatchDetailProps> = ({ matchId }) => {
-  // Mock data for demonstration
-  const match: Match = {
-    id: matchId,
-    candidate: {
-      name: "Анна Смирнова",
-      title: "Frontend Developer",
-      avatar: "/avatar.jpg",
-      location: "Москва",
-      email: "anna.smirnova@example.com",
-      phone: "+7 (916) 123-45-67",
-      company: "ООО Рога и копыта",
-      education: "МГУ",
-      experience: "5 лет",
-    },
-    vacancy: {
-      title: "Frontend Developer",
-      company: "ООО Инновации",
-      location: "Москва",
-      department: "Разработка",
-      type: "Full-time",
-    },
-    score: 92,
-    status: "Подходит",
-    date: "2024-01-20",
-    notes: "Отличный кандидат, соответствует всем требованиям",
-  };
+  useEffect(() => {
+    const match = matchesData.find(m => m.id === matchId);
+    if (match) {
+      setMatchData(match);
+      
+      const candidateData = candidatesData.find(c => c.id === match.candidateId);
+      if (candidateData) {
+        setCandidate(candidateData);
+      }
+      
+      const vacancyData = vacanciesData.find(v => v.id === match.vacancyId);
+      if (vacancyData) {
+        setVacancy(vacancyData);
+      }
+    }
+  }, [matchId]);
+
+  if (!matchData || !candidate || !vacancy) {
+    return <div>Loading...</div>;
+  }
   
-  // When using Badge, let's ensure we're not passing a size prop:
+  // Determine match score color
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return "bg-green-500";
+    if (score >= 75) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  // Get status badge color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Contacted":
+        return "bg-blue-100 text-blue-800";
+      case "Screening":
+        return "bg-purple-100 text-purple-800";
+      case "Interview":
+        return "bg-yellow-100 text-yellow-800";
+      case "Offered":
+        return "bg-green-100 text-green-800";
+      case "Hired":
+        return "bg-emerald-100 text-emerald-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          {match.candidate.name} - {match.vacancy.title}
-        </CardTitle>
-        <CardDescription>
-          Совпадение: {match.score}%
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Детали подборки</CardTitle>
+        {onClose && (
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-4 w-4" />
+          </Button>
+        )}
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="flex items-center space-x-4">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={match.candidate.avatar} alt={match.candidate.name} />
-            <AvatarFallback>AC</AvatarFallback>
-          </Avatar>
+      <CardContent>
+        <div className="grid gap-6 md:grid-cols-2">
           <div>
-            <p className="text-lg font-semibold">{match.candidate.name}</p>
-            <p className="text-sm text-muted-foreground">{match.candidate.title}</p>
-          </div>
-        </div>
-
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList>
-            <TabsTrigger value="profile">Профиль</TabsTrigger>
-            <TabsTrigger value="vacancy">Вакансия</TabsTrigger>
-            <TabsTrigger value="match">Совпадение</TabsTrigger>
-          </TabsList>
-          <TabsContent value="profile" className="space-y-2">
-            <div className="text-sm font-medium">Информация о кандидате:</div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>{match.candidate.location}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span>{match.candidate.email}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span>{match.candidate.phone}</span>
-              </div>
-              <Separator />
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Building className="h-4 w-4" />
-                <span>{match.candidate.company}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <GraduationCap className="h-4 w-4" />
-                <span>{match.candidate.education}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Briefcase className="h-4 w-4" />
-                <span>{match.candidate.experience}</span>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="vacancy" className="space-y-2">
-            <div className="text-sm font-medium">Информация о вакансии:</div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Building className="h-4 w-4" />
-                <span>{match.vacancy.company}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>{match.vacancy.location}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Briefcase className="h-4 w-4" />
-                <span>{match.vacancy.title}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4" />
-                <span>{match.vacancy.department}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>{match.vacancy.type}</span>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="match" className="space-y-2">
-            <div className="text-sm font-medium">Информация о совпадении:</div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>{match.date}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                {match.status === "Подходит" ? (
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                ) : (
-                  <XCircle className="h-4 w-4 text-red-500" />
-                )}
-                {/* Fixed Badge usage (removed invalid size prop): */}
-                <Badge variant="outline" className="bg-blue-100 text-blue-800" style={{ fontSize: '0.75rem' }}>
-                  {match.status}
+            <h3 className="text-lg font-medium mb-4">Кандидат</h3>
+            <div className="flex items-center gap-4 mb-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={candidate.avatar} alt={candidate.name} />
+                <AvatarFallback>{candidate.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h4 className="text-xl font-bold">{candidate.name}</h4>
+                <p className="text-muted-foreground">{candidate.position}</p>
+                <Badge variant="outline" className="mt-1">
+                  {candidate.status}
                 </Badge>
               </div>
-              <div className="text-sm text-muted-foreground">
-                {match.notes}
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span>{candidate.experience}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span>{candidate.email}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-muted-foreground" />
+                <span>{candidate.phone}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span>{candidate.location}</span>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">Навыки</h4>
+              <div className="flex flex-wrap gap-2">
+                {candidate.skills.map((skill: string, index: number) => (
+                  <Badge key={index} variant="secondary">{skill}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium mb-4">Вакансия</h3>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-16 w-16 bg-muted rounded-lg flex items-center justify-center">
+                <img src={vacancy.logo} alt={vacancy.company} className="h-12 w-12 object-contain" />
+              </div>
+              <div>
+                <h4 className="text-xl font-bold">{vacancy.title}</h4>
+                <p className="text-muted-foreground">{vacancy.company}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="outline">{vacancy.type}</Badge>
+                  <Badge variant="outline">{vacancy.location}</Badge>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <span>Опубликовано {vacancy.posted}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span>{vacancy.applicants} соискателей</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                <span className="line-clamp-2">{vacancy.description}</span>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">Требуемые навыки</h4>
+              <div className="flex flex-wrap gap-2">
+                {vacancy.skills.map((skill: string, index: number) => (
+                  <Badge key={index} variant="secondary">{skill}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <Separator className="my-6" />
+        
+        <div className="grid gap-6 md:grid-cols-2">
+          <div>
+            <h3 className="text-lg font-medium mb-4">Результат подборки</h3>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium">Соответствие</span>
+                  <span className="font-bold">{matchData.matchScore}%</span>
+                </div>
+                <Progress value={matchData.matchScore} className={getScoreColor(matchData.matchScore)} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span>Дата подборки: {matchData.date}</span>
+                </div>
+                <Badge className={getStatusColor(matchData.status)} variant="outline">
+                  {matchData.status}
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex justify-end gap-2 mt-6">
+          <Button variant="outline">Отклонить</Button>
+          <Button>Назначить собеседование</Button>
+        </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Отклонить</Button>
-        <Button>
-          Принять
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
