@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
@@ -12,6 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useIsMobile } from '@/hooks/use-mobile';
 import VacancyDetail from '@/components/vacancies/VacancyDetail';
 
+interface ExtendedVacancyProps extends VacancyProps {
+  requirements?: string[];
+  responsibilities?: string[];
+  status?: string;
+  department?: string;
+  experienceRequired?: string;
+  postedDate?: string;
+}
+
 const Vacancies = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,22 +28,19 @@ const Vacancies = () => {
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  // Get the vacancy ID from the URL if present
   const params = new URLSearchParams(location.search);
   const vacancyId = params.get('id');
 
-  // Convert vacanciesData to match VacancyProps type
-  const typedVacancies: VacancyProps[] = vacanciesData.map(vacancy => ({
+  const typedVacancies: ExtendedVacancyProps[] = vacanciesData.map(vacancy => ({
     ...vacancy,
-    type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote"
+    type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote",
+    postedDate: vacancy.posted
   }));
 
-  // Find the selected vacancy if there's an ID in the URL
   const selectedVacancy = vacancyId 
     ? typedVacancies.find(v => v.id === vacancyId) 
     : null;
 
-  // Filter vacancies based on search term and type filter
   const filteredVacancies = typedVacancies.filter(vacancy => {
     const matchesSearch = vacancy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           vacancy.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,7 +51,6 @@ const Vacancies = () => {
     return matchesSearch && matchesType;
   });
 
-  // Sort vacancies
   const sortedVacancies = [...filteredVacancies].sort((a, b) => {
     if (sortBy === 'newest') {
       return new Date(b.posted).getTime() - new Date(a.posted).getTime();
@@ -60,17 +64,14 @@ const Vacancies = () => {
     return 0;
   });
 
-  // Function to handle viewing a vacancy
   const handleViewVacancy = (id: string) => {
     navigate(`/vacancies?id=${id}`);
   };
 
-  // Function to clear the selected vacancy
   const handleBackToList = () => {
     navigate('/vacancies');
   };
 
-  // Determine if we're in detail view or list view
   const isDetailView = !!selectedVacancy;
 
   return (

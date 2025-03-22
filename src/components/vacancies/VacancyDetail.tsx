@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,27 +6,21 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock } from "lucide-react";
+import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock, Mail, Phone, Globe } from "lucide-react";
+import { VacancyProps } from './VacancyCard';
 
-interface VacancyProps {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
-  description: string;
-  requirements: string[];
-  responsibilities: string[];
-  status: string;
-  department: string;
-  type: string;
-  postedDate: string;
-  experienceRequired?: string; // Make experience optional
-  logo: string;
+// Define an extended interface that includes all the properties needed by VacancyDetail
+interface ExtendedVacancyProps extends VacancyProps {
+  requirements?: string[];
+  responsibilities?: string[];
+  status?: string;
+  department?: string;
+  experienceRequired?: string;
+  postedDate?: string;
 }
 
 interface VacancyDetailProps {
-  vacancy: VacancyProps;
+  vacancy: ExtendedVacancyProps;
 }
 
 const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
@@ -47,6 +42,12 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
     email: "m.petrov@" + vacancy.company.toLowerCase().replace(/\s/g, '') + ".ru",
     phone: "+7 (999) 123-45-67"
   };
+
+  // Use postedDate if available, otherwise fall back to posted
+  const displayDate = vacancy.postedDate || vacancy.posted;
+  
+  // Make sure experienceRequired is treated as a string when used
+  const experienceYears = vacancy.experienceRequired ? vacancy.experienceRequired.toString() : "0";
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -76,12 +77,14 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                 </Badge>
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  Опубликовано {vacancy.postedDate}
+                  Опубликовано {displayDate}
                 </Badge>
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {vacancy.applicants} кандидатов
-                </Badge>
+                {vacancy.applicants !== undefined && (
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {vacancy.applicants} кандидатов
+                  </Badge>
+                )}
                 <Badge variant="outline" className="bg-green-100 text-green-800">
                   {vacancy.salary}
                 </Badge>
@@ -99,7 +102,7 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                 <h3 className="text-lg font-medium mb-2">Требования</h3>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Высшее образование в соответствующей области</li>
-                  <li>Опыт работы от {parseInt(vacancy.experienceRequired || 0)} лет</li>
+                  <li>Опыт работы от {experienceYears} лет</li>
                   <li>Отличные коммуникативные навыки</li>
                   <li>Умение работать в команде</li>
                   <li>Аналитическое мышление и внимание к деталям</li>
@@ -117,16 +120,18 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                 </ul>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium mb-2">Необходимые навыки</h3>
-                <div className="flex flex-wrap gap-2">
-                  {vacancy.skills.map((skill) => (
-                    <Badge key={skill} variant="outline" className="bg-secondary">
-                      {skill}
-                    </Badge>
-                  ))}
+              {vacancy.skills && (
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Необходимые навыки</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {vacancy.skills.map((skill) => (
+                      <Badge key={skill} variant="outline" className="bg-secondary">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             
             <div className="md:w-1/3">
@@ -168,12 +173,14 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Дата публикации:</span>
-                      <span>{vacancy.postedDate}</span>
+                      <span>{displayDate}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Заявок получено:</span>
-                      <span>{vacancy.applicants}</span>
-                    </div>
+                    {vacancy.applicants !== undefined && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Заявок получено:</span>
+                        <span>{vacancy.applicants}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">ID вакансии:</span>
                       <span>{vacancy.id}</span>
