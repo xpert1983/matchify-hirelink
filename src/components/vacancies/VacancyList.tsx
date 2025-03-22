@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import VacancyCard, { VacancyProps } from './VacancyCard';
 import { Button } from '@/components/ui/button';
@@ -24,13 +25,24 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
     }
   };
 
+  // Перевод типов вакансий
+  const translateVacancyType = (type: string) => {
+    switch (type) {
+      case 'Full-time': return 'Полная занятость';
+      case 'Part-time': return 'Частичная занятость';
+      case 'Contract': return 'Контракт';
+      case 'Remote': return 'Удаленно';
+      default: return type;
+    }
+  };
+
   return (
     <div className="space-y-6 animate-slide-in">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input 
-            placeholder="Search vacancies..." 
+            placeholder="Поиск вакансий..." 
             className="pl-10"
           />
         </div>
@@ -39,13 +51,13 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
           <div className="flex items-center gap-2">
             <Select defaultValue="all">
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="All Vacancies" />
+                <SelectValue placeholder="Все вакансии" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Vacancies</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
+                <SelectItem value="all">Все вакансии</SelectItem>
+                <SelectItem value="active">Активные</SelectItem>
+                <SelectItem value="draft">Черновики</SelectItem>
+                <SelectItem value="closed">Закрытые</SelectItem>
               </SelectContent>
             </Select>
             
@@ -56,7 +68,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
           
           <Button className="ml-auto md:ml-2 bg-primary hover:bg-primary/90 text-white">
             <Plus className="h-4 w-4 mr-2" />
-            Add Vacancy
+            Добавить вакансию
           </Button>
         </div>
       </div>
@@ -65,7 +77,10 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
         {vacancies.map((vacancy, index) => (
           <VacancyCard 
             key={vacancy.id} 
-            vacancy={vacancy} 
+            vacancy={{
+              ...vacancy,
+              type: vacancy.type // Тип остается на английском, так как он приходит из данных
+            }} 
             onView={handleViewVacancy}
           />
         ))}
@@ -91,11 +106,11 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Briefcase className="h-3 w-3" />
-                  {selectedVacancy.type}
+                  {translateVacancyType(selectedVacancy.type)}
                 </Badge>
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  Posted {selectedVacancy.posted}
+                  Опубликовано {selectedVacancy.posted}
                 </Badge>
                 <Badge variant="outline" className="bg-green-100 text-green-800">
                   {selectedVacancy.salary}
@@ -103,12 +118,12 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Description</h3>
+                <h3 className="font-medium text-sm mb-2">Описание</h3>
                 <p className="text-sm text-muted-foreground">{selectedVacancy.description}</p>
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Required Skills</h3>
+                <h3 className="font-medium text-sm mb-2">Необходимые навыки</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedVacancy.skills.map((skill) => (
                     <Badge key={skill} variant="outline" className="bg-secondary/70">
@@ -120,8 +135,8 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
             </div>
             
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline">Close</Button>
-              <Button className="bg-primary hover:bg-primary/90 text-white">Find Matches</Button>
+              <Button variant="outline">Закрыть</Button>
+              <Button className="bg-primary hover:bg-primary/90 text-white">Найти кандидатов</Button>
             </div>
           </DialogContent>
         </Dialog>

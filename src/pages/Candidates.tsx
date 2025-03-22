@@ -16,8 +16,8 @@ const Candidates = () => {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Candidates</h1>
-          <p className="text-muted-foreground mt-1">Manage and track potential hires.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Кандидаты</h1>
+          <p className="text-muted-foreground mt-1">Управление и отслеживание потенциальных сотрудников.</p>
         </div>
         
         <CandidateList candidates={typedCandidates} />

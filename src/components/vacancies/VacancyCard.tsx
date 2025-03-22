@@ -26,6 +26,17 @@ interface VacancyCardProps {
 }
 
 export const VacancyCard: React.FC<VacancyCardProps> = ({ vacancy, onView }) => {
+  // Перевод типов вакансий
+  const translateVacancyType = (type: string) => {
+    switch (type) {
+      case 'Full-time': return 'Полная занятость';
+      case 'Part-time': return 'Частичная занятость';
+      case 'Contract': return 'Контракт';
+      case 'Remote': return 'Удаленно';
+      default: return type;
+    }
+  };
+
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-elevated hover-scale">
       <CardContent className="p-0">
@@ -53,7 +64,7 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({ vacancy, onView }) => 
             </Badge>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Briefcase className="h-3 w-3" />
-              {vacancy.type}
+              {translateVacancyType(vacancy.type)}
             </Badge>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -81,7 +92,7 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({ vacancy, onView }) => 
       <CardFooter className="flex items-center justify-between p-4 border-t bg-secondary/30">
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{vacancy.applicants} applicants</span>
+          <span className="text-sm text-muted-foreground">{vacancy.applicants} кандидатов</span>
         </div>
         
         <div className="flex items-center gap-2">
@@ -90,13 +101,13 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({ vacancy, onView }) => 
             size="sm"
             onClick={() => onView(vacancy.id)}
           >
-            View Details
+            Подробнее
           </Button>
           <Button 
             size="sm"
             className="bg-primary hover:bg-primary/90 text-white"
           >
-            Find Matches
+            Найти кандидатов
           </Button>
         </div>
       </CardFooter>

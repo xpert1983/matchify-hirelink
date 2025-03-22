@@ -29,6 +29,15 @@ const MatchItem: React.FC<MatchItemProps> = ({ candidate, vacancy, date }) => {
     return 'bg-orange-100 text-orange-800';
   };
 
+  // Переводим даты
+  const translateDate = (date: string) => {
+    switch (date) {
+      case 'Today': return 'Сегодня';
+      case 'Yesterday': return 'Вчера';
+      default: return date.replace('days ago', 'дн. назад');
+    }
+  };
+
   return (
     <div className="flex items-center justify-between p-4 border-b last:border-0 transition-all hover:bg-secondary/50">
       <div className="flex items-center gap-3">
@@ -59,9 +68,9 @@ const MatchItem: React.FC<MatchItemProps> = ({ candidate, vacancy, date }) => {
       
       <div className="flex flex-col items-end">
         <Badge variant="outline" className={`${getScoreColor(candidate.matchScore)}`}>
-          {candidate.matchScore}% Match
+          {candidate.matchScore}% совпадение
         </Badge>
-        <span className="text-xs text-muted-foreground mt-1">{date}</span>
+        <span className="text-xs text-muted-foreground mt-1">{translateDate(date)}</span>
       </div>
     </div>
   );
@@ -72,14 +81,14 @@ export const RecentMatches = () => {
     {
       candidate: {
         id: "c1",
-        name: "Emily Johnson",
+        name: "Елена Смирнова",
         avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
-        position: "UI/UX Designer",
+        position: "UI/UX Дизайнер",
         matchScore: 94,
       },
       vacancy: {
         id: "v1",
-        title: "Senior UI Designer",
+        title: "Старший UI Дизайнер",
         company: "Dropbox",
         logo: "https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/77-dropbox-512.png",
       },
@@ -88,14 +97,14 @@ export const RecentMatches = () => {
     {
       candidate: {
         id: "c2",
-        name: "Michael Chen",
+        name: "Михаил Чен",
         avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
-        position: "Frontend Developer",
+        position: "Frontend-разработчик",
         matchScore: 88,
       },
       vacancy: {
         id: "v2",
-        title: "React Developer",
+        title: "React-разработчик",
         company: "Airbnb",
         logo: "https://cdn4.iconfinder.com/data/icons/socialcones/508/Airbnb-512.png",
       },
@@ -104,14 +113,14 @@ export const RecentMatches = () => {
     {
       candidate: {
         id: "c3",
-        name: "Sarah Williams",
+        name: "Светлана Виллиамс",
         avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
-        position: "Product Manager",
+        position: "Продакт-менеджер",
         matchScore: 76,
       },
       vacancy: {
         id: "v3",
-        title: "Product Manager",
+        title: "Продакт-менеджер",
         company: "Slack",
         logo: "https://cdn0.iconfinder.com/data/icons/social-media-2091/100/social-06-512.png",
       },
@@ -120,14 +129,14 @@ export const RecentMatches = () => {
     {
       candidate: {
         id: "c4",
-        name: "David Rodriguez",
+        name: "Дмитрий Родригес",
         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
-        position: "Backend Engineer",
+        position: "Backend-инженер",
         matchScore: 92,
       },
       vacancy: {
         id: "v4",
-        title: "Node.js Engineer",
+        title: "Node.js инженер",
         company: "Spotify",
         logo: "https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/315_Spotify_logo-512.png",
       },
@@ -138,8 +147,8 @@ export const RecentMatches = () => {
   return (
     <Card className="w-full animate-slide-in" style={{ animationDelay: '100ms' }}>
       <CardHeader className="pb-3">
-        <CardTitle>Recent Matches</CardTitle>
-        <CardDescription>Your latest candidate-vacancy matches</CardDescription>
+        <CardTitle>Последние подборки</CardTitle>
+        <CardDescription>Ваши недавние подборки кандидатов к вакансиям</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         {matchesData.map((match, idx) => (

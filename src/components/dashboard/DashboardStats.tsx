@@ -37,27 +37,27 @@ export const DashboardStats = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in">
       <StatCard 
-        title="Open Vacancies"
+        title="Открытые вакансии"
         value="24"
-        change="+12% from last month"
+        change="+12% к прошлому месяцу"
         icon={<Briefcase className="h-5 w-5 text-primary" />}
       />
       <StatCard 
-        title="Active Candidates"
+        title="Активные кандидаты"
         value="128"
-        change="+18% from last month"
+        change="+18% к прошлому месяцу"
         icon={<Users className="h-5 w-5 text-primary" />}
       />
       <StatCard 
-        title="Successful Matches"
+        title="Успешные подборки"
         value="56"
-        change="+8% from last month"
+        change="+8% к прошлому месяцу"
         icon={<CheckSquare className="h-5 w-5 text-primary" />}
       />
       <StatCard 
-        title="Avg. Time to Hire"
-        value="12 days"
-        change="-2 days from last month"
+        title="Ср. время найма"
+        value="12 дней"
+        change="-2 дня к прошлому месяцу"
         icon={<TrendingUp className="h-5 w-5 text-primary" />}
         positive={true}
       />

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import CandidateCard, { CandidateProps } from './CandidateCard';
 import { Button } from '@/components/ui/button';
@@ -34,13 +35,24 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
     }
   };
 
+  // Перевод статусов
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case 'Available': return 'Доступен';
+      case 'Interviewing': return 'На собеседовании';
+      case 'Hired': return 'Нанят';
+      case 'Not Available': return 'Недоступен';
+      default: return status;
+    }
+  };
+
   return (
     <div className="space-y-6 animate-slide-in">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input 
-            placeholder="Search candidates..." 
+            placeholder="Поиск кандидатов..." 
             className="pl-10"
           />
         </div>
@@ -49,13 +61,13 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
           <div className="flex items-center gap-2">
             <Select defaultValue="all">
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="All Candidates" />
+                <SelectValue placeholder="Все кандидаты" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Candidates</SelectItem>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="interviewing">Interviewing</SelectItem>
-                <SelectItem value="hired">Hired</SelectItem>
+                <SelectItem value="all">Все кандидаты</SelectItem>
+                <SelectItem value="available">Доступные</SelectItem>
+                <SelectItem value="interviewing">На собеседовании</SelectItem>
+                <SelectItem value="hired">Нанятые</SelectItem>
               </SelectContent>
             </Select>
             
@@ -66,7 +78,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
           
           <Button className="ml-auto md:ml-2 bg-primary hover:bg-primary/90 text-white">
             <Plus className="h-4 w-4 mr-2" />
-            Add Candidate
+            Добавить кандидата
           </Button>
         </div>
       </div>
@@ -75,7 +87,10 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
         {candidates.map((candidate) => (
           <CandidateCard 
             key={candidate.id} 
-            candidate={candidate}
+            candidate={{
+              ...candidate,
+              status: candidate.status // Статус остается на английском, так как он приходит из данных
+            }}
             onView={handleViewCandidate}
           />
         ))}
@@ -94,7 +109,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
                   <div className="flex items-center gap-2">
                     <DialogTitle className="text-xl">{selectedCandidate.name}</DialogTitle>
                     <Badge variant="outline" className={getStatusColor(selectedCandidate.status)}>
-                      {selectedCandidate.status}
+                      {translateStatus(selectedCandidate.status)}
                     </Badge>
                   </div>
                   <DialogDescription>{selectedCandidate.position}</DialogDescription>
@@ -132,7 +147,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Skills</h3>
+                <h3 className="font-medium text-sm mb-2">Навыки</h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedCandidate.skills.map((skill) => (
                     <Badge key={skill} variant="outline" className="bg-secondary/70">
@@ -144,8 +159,8 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
             </div>
             
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline">Close</Button>
-              <Button className="bg-primary hover:bg-primary/90 text-white">Find Matches</Button>
+              <Button variant="outline">Закрыть</Button>
+              <Button className="bg-primary hover:bg-primary/90 text-white">Найти вакансии</Button>
             </div>
           </DialogContent>
         </Dialog>

@@ -10,7 +10,7 @@ import { SidebarTrigger } from '@/components/layout/Sidebar';
 export const Header = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [pageTitle, setPageTitle] = useState('Dashboard');
+  const [pageTitle, setPageTitle] = useState('Панель управления');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,11 +25,11 @@ export const Header = () => {
 
   useEffect(() => {
     const path = location.pathname;
-    if (path === '/') setPageTitle('Dashboard');
-    else if (path === '/vacancies') setPageTitle('Vacancies');
-    else if (path === '/candidates') setPageTitle('Candidates');
-    else if (path === '/matches') setPageTitle('Matches');
-    else setPageTitle('HireLink');
+    if (path === '/') setPageTitle('Панель управления');
+    else if (path === '/vacancies') setPageTitle('Вакансии');
+    else if (path === '/candidates') setPageTitle('Кандидаты');
+    else if (path === '/matches') setPageTitle('Подборки');
+    else setPageTitle('РекрутЛинк');
   }, [location]);
 
   return (
@@ -47,7 +47,7 @@ export const Header = () => {
         <div className="hidden md:flex items-center relative max-w-md w-full mx-8">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input 
-            placeholder="Search vacancies, candidates..." 
+            placeholder="Поиск вакансий, кандидатов..." 
             className="pl-10 bg-secondary border-none h-9 focus-visible:ring-1 transition-all"
           />
         </div>
@@ -62,9 +62,9 @@ export const Header = () => {
             <Button variant="ghost" size="sm" className="gap-2 hidden sm:flex">
               <Avatar className="h-8 w-8">
                 <AvatarImage src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>АИ</AvatarFallback>
               </Avatar>
-              <span className="font-medium text-sm">Jane Doe</span>
+              <span className="font-medium text-sm">Анна Иванова</span>
             </Button>
             <Button variant="ghost" size="icon" className="sm:hidden">
               <User className="h-5 w-5" />

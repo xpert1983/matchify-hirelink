@@ -16,8 +16,8 @@ const Vacancies = () => {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Vacancies</h1>
-          <p className="text-muted-foreground mt-1">Manage and track your open positions.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Вакансии</h1>
+          <p className="text-muted-foreground mt-1">Управление и отслеживание ваших открытых позиций.</p>
         </div>
         
         <VacancyList vacancies={typedVacancies} />

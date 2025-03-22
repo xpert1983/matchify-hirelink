@@ -41,7 +41,7 @@ export const SidebarTrigger = () => {
       size="icon" 
       className="h-9 w-9" 
       onClick={toggle}
-      aria-label="Toggle sidebar"
+      aria-label="Открыть меню"
     >
       {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
     </Button>
@@ -53,10 +53,10 @@ export const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/vacancies', label: 'Vacancies', icon: Briefcase },
-    { path: '/candidates', label: 'Candidates', icon: Users },
-    { path: '/matches', label: 'Matches', icon: CheckSquare },
+    { path: '/', label: 'Панель управления', icon: LayoutDashboard },
+    { path: '/vacancies', label: 'Вакансии', icon: Briefcase },
+    { path: '/candidates', label: 'Кандидаты', icon: Users },
+    { path: '/matches', label: 'Подборки', icon: CheckSquare },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -83,9 +83,9 @@ export const Sidebar = () => {
         <div className="flex items-center justify-between p-4 h-[62px] border-b border-border">
           <Link to="/" className="flex items-center gap-2" onClick={close}>
             <div className="w-8 h-8 flex items-center justify-center rounded-md bg-primary text-white font-semibold">
-              HL
+              РЛ
             </div>
-            <span className="text-lg font-semibold">HireLink</span>
+            <span className="text-lg font-semibold">РекрутЛинк</span>
           </Link>
           <Button 
             variant="ghost" 
@@ -131,7 +131,7 @@ export const Sidebar = () => {
                 className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
               >
                 <Settings className="h-5 w-5 shrink-0 text-muted-foreground" />
-                Settings
+                Настройки
               </Link>
             </li>
             <li>
@@ -139,7 +139,7 @@ export const Sidebar = () => {
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
               >
                 <LogOut className="h-5 w-5 shrink-0 text-muted-foreground" />
-                Logout
+                Выйти
               </button>
             </li>
           </ul>

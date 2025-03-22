@@ -36,31 +36,49 @@ const Matches = () => {
     }
   };
   
+  // Переводим статусы
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case 'Contacted': return 'Связались';
+      case 'Screening': return 'Скрининг';
+      case 'Interview': return 'Интервью';
+      case 'Offered': return 'Оффер';
+      case 'Hired': return 'Принят';
+      case 'Rejected': return 'Отклонен';
+      default: return status;
+    }
+  };
+  
   return (
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Matches</h1>
-          <p className="text-muted-foreground mt-1">View and manage candidate-vacancy matches.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Подборки</h1>
+          <p className="text-muted-foreground mt-1">Просмотр и управление подбором вакансий для кандидатов.</p>
         </div>
         
         <Tabs defaultValue="all" className="w-full animate-fade-in">
           <div className="flex justify-between items-center">
             <TabsList>
-              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>All Matches</TabsTrigger>
-              <TabsTrigger value="recent" onClick={() => setActiveTab("recent")}>Recent</TabsTrigger>
-              <TabsTrigger value="high" onClick={() => setActiveTab("high")}>High Score</TabsTrigger>
+              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Все подборки</TabsTrigger>
+              <TabsTrigger value="recent" onClick={() => setActiveTab("recent")}>Недавние</TabsTrigger>
+              <TabsTrigger value="high" onClick={() => setActiveTab("high")}>Высокий рейтинг</TabsTrigger>
             </TabsList>
             
             <Button className="bg-primary hover:bg-primary/90 text-white">
-              Generate New Matches
+              Создать новые подборки
             </Button>
           </div>
           
           <TabsContent value="all" className="mt-6">
             <div className="space-y-4">
               {combinedMatches.map((match) => (
-                <MatchCard key={match.id} match={match} statusColor={getStatusColor(match.status)} />
+                <MatchCard 
+                  key={match.id} 
+                  match={match} 
+                  statusColor={getStatusColor(match.status)}
+                  translatedStatus={translateStatus(match.status)}
+                />
               ))}
             </div>
           </TabsContent>
@@ -68,7 +86,12 @@ const Matches = () => {
           <TabsContent value="recent" className="mt-6">
             <div className="space-y-4">
               {combinedMatches.slice(0, 3).map((match) => (
-                <MatchCard key={match.id} match={match} statusColor={getStatusColor(match.status)} />
+                <MatchCard 
+                  key={match.id} 
+                  match={match} 
+                  statusColor={getStatusColor(match.status)}
+                  translatedStatus={translateStatus(match.status)}
+                />
               ))}
             </div>
           </TabsContent>
@@ -79,7 +102,12 @@ const Matches = () => {
                 .sort((a, b) => b.matchScore - a.matchScore)
                 .slice(0, 3)
                 .map((match) => (
-                  <MatchCard key={match.id} match={match} statusColor={getStatusColor(match.status)} />
+                  <MatchCard 
+                    key={match.id} 
+                    match={match} 
+                    statusColor={getStatusColor(match.status)}
+                    translatedStatus={translateStatus(match.status)}
+                  />
                 ))}
             </div>
           </TabsContent>
@@ -92,9 +120,10 @@ const Matches = () => {
 interface MatchCardProps {
   match: any;
   statusColor: string;
+  translatedStatus: string;
 }
 
-const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor }) => {
+const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor, translatedStatus }) => {
   return (
     <Card className="hover:shadow-elevated transition-all duration-300 animate-scale-in">
       <CardContent className="p-6">
@@ -127,7 +156,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor }) => {
           
           <div className="flex flex-col justify-center">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium">Match Score:</span>
+              <span className="text-sm font-medium">Рейтинг совпадения:</span>
               <Badge className="bg-primary/10 text-primary">
                 {match.matchScore}%
               </Badge>
@@ -135,10 +164,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor }) => {
             <Progress value={match.matchScore} className="h-2 mb-3" />
             <div className="flex justify-between">
               <Badge variant="outline" className={statusColor}>
-                {match.status}
+                {translatedStatus}
               </Badge>
               <Button variant="ghost" size="sm" className="h-7 text-xs">
-                Update Status
+                Обновить статус
               </Button>
             </div>
           </div>

@@ -37,17 +37,17 @@ const Dashboard = () => {
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Welcome back!</h1>
-            <p className="text-muted-foreground mt-1">Here's what's happening with your recruitment today.</p>
+            <h1 className="text-3xl font-bold tracking-tight">Добро пожаловать!</h1>
+            <p className="text-muted-foreground mt-1">Вот что происходит с вашим рекрутингом сегодня.</p>
           </div>
           <div className="flex space-x-2">
             <Button variant="outline" size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              New Vacancy
+              Новая вакансия
             </Button>
             <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
               <Plus className="h-4 w-4 mr-2" />
-              New Candidate
+              Новый кандидат
             </Button>
           </div>
         </div>
@@ -62,8 +62,8 @@ const Dashboard = () => {
           <div className="space-y-6">
             <Card className="animate-slide-in" style={{ animationDelay: '200ms' }}>
               <CardHeader className="pb-3">
-                <CardTitle>Most Demanded Skills</CardTitle>
-                <CardDescription>Top skills requested in open vacancies</CardDescription>
+                <CardTitle>Востребованные навыки</CardTitle>
+                <CardDescription>Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -82,22 +82,22 @@ const Dashboard = () => {
             
             <Card className="animate-slide-in" style={{ animationDelay: '300ms' }}>
               <CardHeader className="pb-3">
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Get started with these tasks</CardDescription>
+                <CardTitle>Быстрые действия</CardTitle>
+                <CardDescription>Начните с этих задач</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <Button variant="outline" className="w-full justify-start text-left">
-                    Review new candidate profiles
+                    Просмотреть новые профили кандидатов
                   </Button>
                   <Button variant="outline" className="w-full justify-start text-left">
-                    Update vacancy details
+                    Обновить данные вакансий
                   </Button>
                   <Button variant="outline" className="w-full justify-start text-left">
-                    Schedule candidate interviews
+                    Запланировать собеседования
                   </Button>
                   <Button variant="outline" className="w-full justify-start text-left">
-                    Generate matching report
+                    Создать отчет о подборе
                   </Button>
                 </div>
               </CardContent>

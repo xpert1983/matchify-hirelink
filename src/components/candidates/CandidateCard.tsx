@@ -36,6 +36,17 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
     }
   };
 
+  // Перевод статусов
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case 'Available': return 'Доступен';
+      case 'Interviewing': return 'На собеседовании';
+      case 'Hired': return 'Нанят';
+      case 'Not Available': return 'Недоступен';
+      default: return status;
+    }
+  };
+
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-elevated hover-scale">
       <CardContent className="p-0">
@@ -50,7 +61,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
                 <div className="flex items-center gap-2">
                   <h3 className="font-medium text-lg">{candidate.name}</h3>
                   <Badge variant="outline" className={getStatusColor(candidate.status)}>
-                    {candidate.status}
+                    {translateStatus(candidate.status)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground">{candidate.position}</p>
@@ -107,13 +118,13 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
             size="sm"
             onClick={() => onView(candidate.id)}
           >
-            View Profile
+            Просмотр профиля
           </Button>
           <Button 
             size="sm"
             className="bg-primary hover:bg-primary/90 text-white"
           >
-            Find Matches
+            Найти вакансии
           </Button>
         </div>
       </CardFooter>
