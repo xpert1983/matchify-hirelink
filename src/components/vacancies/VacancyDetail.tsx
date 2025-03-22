@@ -1,23 +1,28 @@
-
 import React from 'react';
-import { VacancyProps } from './VacancyCard';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  MapPin, 
-  Briefcase, 
-  Clock, 
-  Users, 
-  Mail, 
-  Phone, 
-  Globe,
-  CalendarDays,
-  UserCircle2,
-  Building2
-} from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock } from "lucide-react";
+
+interface VacancyProps {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  salary: string;
+  description: string;
+  requirements: string[];
+  responsibilities: string[];
+  status: string;
+  department: string;
+  type: string;
+  postedDate: string;
+  experienceRequired?: string; // Make experience optional
+  logo: string;
+}
 
 interface VacancyDetailProps {
   vacancy: VacancyProps;
@@ -71,7 +76,7 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                 </Badge>
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  Опубликовано {vacancy.posted}
+                  Опубликовано {vacancy.postedDate}
                 </Badge>
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Users className="h-3 w-3" />
@@ -94,7 +99,7 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                 <h3 className="text-lg font-medium mb-2">Требования</h3>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Высшее образование в соответствующей области</li>
-                  <li>Опыт работы от {parseInt(vacancy.experience)} лет</li>
+                  <li>Опыт работы от {parseInt(vacancy.experienceRequired || 0)} лет</li>
                   <li>Отличные коммуникативные навыки</li>
                   <li>Умение работать в команде</li>
                   <li>Аналитическое мышление и внимание к деталям</li>
@@ -149,7 +154,7 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                       <span>{contactPerson.phone}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                      <Building className="h-4 w-4 text-muted-foreground" />
                       <span>{vacancy.location}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
@@ -163,7 +168,7 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Дата публикации:</span>
-                      <span>{vacancy.posted}</span>
+                      <span>{vacancy.postedDate}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Заявок получено:</span>

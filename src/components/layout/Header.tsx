@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useSidebar } from './Sidebar';
+import { useSidebar } from '@/components/ui/sidebar';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
