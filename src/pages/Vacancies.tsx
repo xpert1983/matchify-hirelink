@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
@@ -19,7 +18,6 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { VacancyStatus } from '@/components/vacancies/VacancyStatusBadge';
 
-// Интерфейс с расширенными свойствами для VacancyDetail
 interface ExtendedVacancyProps extends VacancyProps {
   requirements?: string[];
   responsibilities?: string[];
@@ -45,7 +43,6 @@ const Vacancies = () => {
   const params = new URLSearchParams(location.search);
   const vacancyId = params.get('id');
 
-  // Mock data for interviews
   const interviewsData = [
     {
       id: '1',
@@ -60,7 +57,7 @@ const Vacancies = () => {
       id: '2',
       candidateName: 'Иван Петров',
       vacancyTitle: 'UX Designer',
-      date: new Date(Date.now() + 86400000), // завтра
+      date: new Date(Date.now() + 86400000),
       time: '11:30',
       location: 'Офис, переговорная #2',
       status: 'scheduled' as const
@@ -69,14 +66,13 @@ const Vacancies = () => {
       id: '3',
       candidateName: 'Мария Иванова',
       vacancyTitle: 'Product Manager',
-      date: new Date(Date.now() + 172800000), // послезавтра
+      date: new Date(Date.now() + 172800000),
       time: '14:00',
       location: 'Zoom',
       status: 'scheduled' as const
     }
   ];
 
-  // Mock data for analytics
   const analyticsData = {
     applicantsByVacancy: [
       { name: 'Frontend Developer', value: 42, color: '#4F46E5' },
@@ -110,7 +106,6 @@ const Vacancies = () => {
     ]
   };
 
-  // Расширяем вакансии дополнительными свойствами
   const typedVacancies: ExtendedVacancyProps[] = vacanciesData.map(vacancy => ({
     ...vacancy,
     type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote",
@@ -125,12 +120,10 @@ const Vacancies = () => {
     ? typedVacancies.find(v => v.id === vacancyId) 
     : null;
 
-  // Получаем уникальные навыки из всех вакансий
   const allSkills = Array.from(
     new Set(typedVacancies.flatMap(v => v.skills))
   );
 
-  // Функция фильтрации вакансий
   const filterVacancies = (vacancies: ExtendedVacancyProps[]) => {
     return vacancies.filter(vacancy => {
       const matchesSearch = vacancy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -139,16 +132,13 @@ const Vacancies = () => {
       
       const matchesType = filterType === 'all' ? true : vacancy.type === filterType;
       
-      // Фильтрация по зарплате (преобразуем строку зарплаты в число)
       const salaryString = vacancy.salary.replace(/[^\d]/g, '');
       const salary = parseInt(salaryString, 10);
       const matchesSalary = isNaN(salary) ? true : (salary >= salaryRange[0] && salary <= salaryRange[1]);
       
-      // Фильтрация по опыту работы
       const matchesExperience = experienceLevel.length === 0 ? true : 
         experienceLevel.includes(vacancy.experienceRequired || '');
       
-      // Фильтрация по навыкам
       const matchesSkills = selectedSkills.length === 0 ? true :
         selectedSkills.every(skill => vacancy.skills.includes(skill));
       
@@ -156,7 +146,6 @@ const Vacancies = () => {
     });
   };
 
-  // Функция сортировки вакансий
   const sortVacancies = (vacancies: ExtendedVacancyProps[]) => {
     return [...vacancies].sort((a, b) => {
       if (sortBy === 'newest') {
@@ -176,7 +165,6 @@ const Vacancies = () => {
     });
   };
 
-  // Применение фильтров и сортировки
   const filteredVacancies = filterVacancies(typedVacancies);
   const sortedVacancies = sortVacancies(filteredVacancies);
 
@@ -218,7 +206,6 @@ const Vacancies = () => {
   };
 
   const applyFilters = () => {
-    // Просто перезапустим фильтрацию
     toast.success('Фильтры применены');
   };
 
@@ -236,7 +223,7 @@ const Vacancies = () => {
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-[95%] mx-auto">
         {isDetailView ? (
           <div className="space-y-6">
             <div className="flex items-center">

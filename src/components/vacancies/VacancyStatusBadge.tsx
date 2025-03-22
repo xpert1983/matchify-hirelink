@@ -51,13 +51,13 @@ const VacancyStatusBadge: React.FC<VacancyStatusBadgeProps> = ({ status, size = 
   return (
     <Badge 
       variant="outline" 
-      className={`flex items-center gap-1 font-medium ${variant} ${
+      className={`flex items-center gap-1 font-medium whitespace-nowrap overflow-hidden ${variant} ${
         size === 'sm' ? 'text-xs py-0 px-2' : 
         size === 'md' ? 'text-sm' : 'text-base py-1.5 px-3'
       }`}
     >
       {icon}
-      {label}
+      <span className="truncate">{label}</span>
     </Badge>
   );
 };
