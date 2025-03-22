@@ -8,9 +8,38 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { matchesData, candidatesData, vacanciesData } from '@/lib/data';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { 
+  ArrowLeft, 
+  Filter, 
+  Search, 
+  Plus, 
+  SlidersHorizontal,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  User,
+  Briefcase,
+  Mail,
+  Phone,
+  ArrowRight,
+  Clock
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import MatchDetail from '@/components/matches/MatchDetail';
 
 const Matches = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortBy, setSortBy] = useState('score-high');
+  
+  // Get the match ID from the URL if present
+  const params = new URLSearchParams(location.search);
+  const matchId = params.get('id');
   
   // Combine match data with candidate and vacancy details
   const combinedMatches = matchesData.map(match => {
@@ -23,6 +52,11 @@ const Matches = () => {
       vacancy
     };
   });
+  
+  // Find the selected match if there's an ID in the URL
+  const selectedMatch = matchId 
+    ? combinedMatches.find(m => m.id === matchId) 
+    : null;
   
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -49,69 +83,200 @@ const Matches = () => {
     }
   };
   
+  // Filter matches based on search term and status filter
+  const filteredMatches = combinedMatches.filter(match => {
+    const matchesSearch = 
+      match.candidate?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      match.vacancy?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      match.vacancy?.company.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = filterStatus === 'all' ? true : match.status === filterStatus;
+    const matchesTab = activeTab === 'all' ? true : 
+                       activeTab === 'recent' ? new Date(match.lastUpdated) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) :
+                       activeTab === 'high' ? match.matchScore >= 85 : true;
+    
+    return matchesSearch && matchesStatus && matchesTab;
+  });
+
+  // Sort matches
+  const sortedMatches = [...filteredMatches].sort((a, b) => {
+    if (sortBy === 'score-high') {
+      return b.matchScore - a.matchScore;
+    } else if (sortBy === 'score-low') {
+      return a.matchScore - b.matchScore;
+    } else if (sortBy === 'recent') {
+      return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+    } else if (sortBy === 'oldest') {
+      return new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime();
+    }
+    return 0;
+  });
+  
+  // Function to handle viewing a match
+  const handleViewMatch = (id: string) => {
+    navigate(`/matches?id=${id}`);
+  };
+
+  // Function to clear the selected match
+  const handleBackToList = () => {
+    navigate('/matches');
+  };
+
+  // Determine if we're in detail view or list view
+  const isDetailView = !!selectedMatch;
+  
   return (
     <Layout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Подборки</h1>
-          <p className="text-muted-foreground mt-1">Просмотр и управление подбором вакансий для кандидатов.</p>
-        </div>
-        
-        <Tabs defaultValue="all" className="w-full animate-fade-in">
-          <div className="flex justify-between items-center">
-            <TabsList>
-              <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Все подборки</TabsTrigger>
-              <TabsTrigger value="recent" onClick={() => setActiveTab("recent")}>Недавние</TabsTrigger>
-              <TabsTrigger value="high" onClick={() => setActiveTab("high")}>Высокий рейтинг</TabsTrigger>
-            </TabsList>
-            
-            <Button className="bg-primary hover:bg-primary/90 text-white">
-              Создать новые подборки
-            </Button>
+        {isDetailView ? (
+          <div className="space-y-6">
+            <div className="flex items-center">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mr-4" 
+                onClick={handleBackToList}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Назад к списку
+              </Button>
+              <h1 className="text-3xl font-bold tracking-tight">Детали подбора</h1>
+            </div>
+            {selectedMatch && <MatchDetail match={selectedMatch} />}
           </div>
-          
-          <TabsContent value="all" className="mt-6">
-            <div className="space-y-4">
-              {combinedMatches.map((match) => (
-                <MatchCard 
-                  key={match.id} 
-                  match={match} 
-                  statusColor={getStatusColor(match.status)}
-                  translatedStatus={translateStatus(match.status)}
+        ) : (
+          <>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Подборки</h1>
+                <p className="text-muted-foreground mt-1">Просмотр и управление подбором вакансий для кандидатов.</p>
+              </div>
+              <Button className="bg-primary hover:bg-primary/90 text-white self-start sm:self-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                Создать новые подборки
+              </Button>
+            </div>
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="relative w-full md:w-96">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input 
+                  placeholder="Поиск подборок..." 
+                  className="pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              ))}
+              </div>
+              
+              <div className="flex items-center gap-2 w-full md:w-auto">
+                <Select 
+                  value={filterStatus} 
+                  onValueChange={setFilterStatus}
+                >
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Все статусы" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Все статусы</SelectItem>
+                    <SelectItem value="Contacted">Связались</SelectItem>
+                    <SelectItem value="Screening">Скрининг</SelectItem>
+                    <SelectItem value="Interview">Интервью</SelectItem>
+                    <SelectItem value="Offered">Оффер</SelectItem>
+                    <SelectItem value="Hired">Принят</SelectItem>
+                    <SelectItem value="Rejected">Отклонен</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select 
+                  value={sortBy} 
+                  onValueChange={setSortBy}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Сортировка" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="score-high">Лучшие совпадения</SelectItem>
+                    <SelectItem value="score-low">Худшие совпадения</SelectItem>
+                    <SelectItem value="recent">Сначала новые</SelectItem>
+                    <SelectItem value="oldest">Сначала старые</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Button variant="outline" size="icon" className="h-10 w-10">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="recent" className="mt-6">
-            <div className="space-y-4">
-              {combinedMatches.slice(0, 3).map((match) => (
-                <MatchCard 
-                  key={match.id} 
-                  match={match} 
-                  statusColor={getStatusColor(match.status)}
-                  translatedStatus={translateStatus(match.status)}
-                />
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="high" className="mt-6">
-            <div className="space-y-4">
-              {combinedMatches
-                .sort((a, b) => b.matchScore - a.matchScore)
-                .slice(0, 3)
-                .map((match) => (
-                  <MatchCard 
-                    key={match.id} 
-                    match={match} 
-                    statusColor={getStatusColor(match.status)}
-                    translatedStatus={translateStatus(match.status)}
-                  />
-                ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+            
+            <Tabs defaultValue="all" value={activeTab} className="w-full animate-fade-in">
+              <TabsList>
+                <TabsTrigger value="all" onClick={() => setActiveTab("all")}>Все подборки</TabsTrigger>
+                <TabsTrigger value="recent" onClick={() => setActiveTab("recent")}>Недавние</TabsTrigger>
+                <TabsTrigger value="high" onClick={() => setActiveTab("high")}>Высокий рейтинг</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="all" className="mt-6">
+                <div className="space-y-4">
+                  {sortedMatches.length > 0 ? (
+                    sortedMatches.map((match) => (
+                      <MatchCard 
+                        key={match.id} 
+                        match={match} 
+                        statusColor={getStatusColor(match.status)}
+                        translatedStatus={translateStatus(match.status)}
+                        onView={() => handleViewMatch(match.id)}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center p-10 border rounded-lg bg-secondary/30">
+                      <p className="text-muted-foreground">Нет подборок, соответствующих критериям поиска</p>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="recent" className="mt-6">
+                <div className="space-y-4">
+                  {sortedMatches.length > 0 ? (
+                    sortedMatches.map((match) => (
+                      <MatchCard 
+                        key={match.id} 
+                        match={match} 
+                        statusColor={getStatusColor(match.status)}
+                        translatedStatus={translateStatus(match.status)}
+                        onView={() => handleViewMatch(match.id)}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center p-10 border rounded-lg bg-secondary/30">
+                      <p className="text-muted-foreground">Нет недавних подборок, соответствующих критериям поиска</p>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="high" className="mt-6">
+                <div className="space-y-4">
+                  {sortedMatches.length > 0 ? (
+                    sortedMatches.map((match) => (
+                      <MatchCard 
+                        key={match.id} 
+                        match={match} 
+                        statusColor={getStatusColor(match.status)}
+                        translatedStatus={translateStatus(match.status)}
+                        onView={() => handleViewMatch(match.id)}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center p-10 border rounded-lg bg-secondary/30">
+                      <p className="text-muted-foreground">Нет подборок с высоким рейтингом, соответствующих критериям поиска</p>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </>
+        )}
       </div>
     </Layout>
   );
@@ -121,11 +286,12 @@ interface MatchCardProps {
   match: any;
   statusColor: string;
   translatedStatus: string;
+  onView: () => void;
 }
 
-const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor, translatedStatus }) => {
+const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor, translatedStatus, onView }) => {
   return (
-    <Card className="hover:shadow-elevated transition-all duration-300 animate-scale-in">
+    <Card className="hover:shadow-elevated transition-all duration-300 animate-scale-in hover:cursor-pointer" onClick={onView}>
       <CardContent className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2">
@@ -166,9 +332,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, statusColor, translatedSta
               <Badge variant="outline" className={statusColor}>
                 {translatedStatus}
               </Badge>
-              <Button variant="ghost" size="sm" className="h-7 text-xs">
-                Обновить статус
-              </Button>
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Clock className="h-3 w-3 mr-1" />
+                <span>{match.lastUpdated}</span>
+              </div>
             </div>
           </div>
         </div>

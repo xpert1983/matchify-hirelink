@@ -1,75 +1,141 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Bell, Search, User } from 'lucide-react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SidebarTrigger } from '@/components/layout/Sidebar';
+import { 
+  Bell, 
+  Menu, 
+  Search,
+  Settings as SettingsIcon
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useSidebar } from './Sidebar';
+import { DarkModeToggle } from './DarkModeToggle';
+import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 
-export const Header = () => {
-  const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const [pageTitle, setPageTitle] = useState('Панель управления');
+interface HeaderProps {
+  // No props needed for now
+}
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const path = location.pathname;
-    if (path === '/') setPageTitle('Панель управления');
-    else if (path === '/vacancies') setPageTitle('Вакансии');
-    else if (path === '/candidates') setPageTitle('Кандидаты');
-    else if (path === '/matches') setPageTitle('Подборки');
-    else setPageTitle('РекрутЛинк');
-  }, [location]);
+const Header: React.FC<HeaderProps> = () => {
+  const { toggleSidebar } = useSidebar();
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-40 px-4 py-3 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 backdrop-blur-md shadow-subtle' : 'bg-transparent'
-      }`}
-    >
-      <div className="flex items-center justify-between max-w-screen-2xl mx-auto">
+    <header className="fixed top-0 right-0 left-0 md:left-64 z-40 transition-all duration-300 h-[80px] border-b bg-background">
+      <div className="flex items-center justify-between h-full px-6">
         <div className="flex items-center gap-4">
-          <SidebarTrigger />
-          <h1 className="text-xl font-semibold tracking-tight animate-fade-in">{pageTitle}</h1>
-        </div>
-
-        <div className="hidden md:flex items-center relative max-w-md w-full mx-8">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input 
-            placeholder="Поиск вакансий, кандидатов..." 
-            className="pl-10 bg-secondary border-none h-9 focus-visible:ring-1 transition-all"
-          />
-        </div>
-
-        <div className="flex items-center gap-1 sm:gap-2">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden" 
+            onClick={toggleSidebar}
+          >
+            <Menu className="h-5 w-5" />
           </Button>
           
-          <Link to="/profile">
-            <Button variant="ghost" size="sm" className="gap-2 hidden sm:flex">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3" />
-                <AvatarFallback>АИ</AvatarFallback>
-              </Avatar>
-              <span className="font-medium text-sm">Анна Иванова</span>
-            </Button>
-            <Button variant="ghost" size="icon" className="sm:hidden">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
+          <div className="relative max-w-[500px] hidden md:flex">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input 
+              placeholder="Поиск..." 
+              className="pl-10 w-full md:w-[300px] lg:w-[400px] h-9" 
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <DarkModeToggle />
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="relative h-9 w-9">
+                <Bell className="h-4 w-4" />
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-medium text-primary-foreground flex items-center justify-center">
+                  3
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[300px]">
+              <DropdownMenuLabel>Уведомления</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="max-h-[300px] overflow-auto">
+                <DropdownMenuItem className="py-3 cursor-pointer">
+                  <div className="flex items-start gap-2">
+                    <Badge variant="outline" className="bg-green-100 text-green-800 mt-0.5">Новое</Badge>
+                    <div>
+                      <p className="font-medium">Новый кандидат</p>
+                      <p className="text-sm text-muted-foreground">Анна Смирнова откликнулась на вакансию "Frontend Developer"</p>
+                      <p className="text-xs text-muted-foreground mt-1">5 минут назад</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="py-3 cursor-pointer">
+                  <div className="flex items-start gap-2">
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 mt-0.5">Инфо</Badge>
+                    <div>
+                      <p className="font-medium">Собеседование</p>
+                      <p className="text-sm text-muted-foreground">Запланировано собеседование с Иваном Петровым</p>
+                      <p className="text-xs text-muted-foreground mt-1">2 часа назад</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="py-3 cursor-pointer">
+                  <div className="flex items-start gap-2">
+                    <Badge variant="outline" className="bg-purple-100 text-purple-800 mt-0.5">Система</Badge>
+                    <div>
+                      <p className="font-medium">Обновление</p>
+                      <p className="text-sm text-muted-foreground">Система обновлена до версии 2.1.0</p>
+                      <p className="text-xs text-muted-foreground mt-1">1 день назад</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="justify-center font-medium text-primary">
+                Показать все уведомления
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-9 gap-2 pl-2 pr-3" asChild>
+                <div className="flex items-center cursor-pointer">
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage src="/avatar.jpg" alt="User" />
+                    <AvatarFallback>АИ</AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium text-sm hidden sm:inline-block">Анна Иванова</span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/settings">
+                  <SettingsIcon className="h-4 w-4 mr-2" />
+                  <span>Настройки</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <SettingsIcon className="h-4 w-4 mr-2" />
+                <span>Профиль</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                Выйти
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

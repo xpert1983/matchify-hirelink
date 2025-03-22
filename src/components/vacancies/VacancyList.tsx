@@ -1,27 +1,29 @@
 
 import React, { useState } from 'react';
 import VacancyCard, { VacancyProps } from './VacancyCard';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus, Filter, Briefcase, Clock } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Briefcase, Clock, Filter, MapPin, Plus, Search } from 'lucide-react';
 
 interface VacancyListProps {
   vacancies: VacancyProps[];
+  onViewVacancy?: (id: string) => void;
 }
 
-export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
+export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onViewVacancy }) => {
   const [selectedVacancy, setSelectedVacancy] = useState<VacancyProps | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleViewVacancy = (id: string) => {
-    const vacancy = vacancies.find(v => v.id === id);
-    if (vacancy) {
-      setSelectedVacancy(vacancy);
-      setIsDialogOpen(true);
+    if (onViewVacancy) {
+      onViewVacancy(id);
+    } else {
+      const vacancy = vacancies.find(v => v.id === id);
+      if (vacancy) {
+        setSelectedVacancy(vacancy);
+        setIsDialogOpen(true);
+      }
     }
   };
 
@@ -38,53 +40,21 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
 
   return (
     <div className="space-y-6 animate-slide-in">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input 
-            placeholder="Поиск вакансий..." 
-            className="pl-10"
-          />
+      {vacancies.length === 0 ? (
+        <div className="text-center p-10 border rounded-lg bg-secondary/30">
+          <p className="text-muted-foreground">Нет вакансий, соответствующих критериям поиска</p>
         </div>
-        
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <div className="flex items-center gap-2">
-            <Select defaultValue="all">
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Все вакансии" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все вакансии</SelectItem>
-                <SelectItem value="active">Активные</SelectItem>
-                <SelectItem value="draft">Черновики</SelectItem>
-                <SelectItem value="closed">Закрытые</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button variant="outline" size="icon" className="h-10 w-10">
-              <Filter className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <Button className="ml-auto md:ml-2 bg-primary hover:bg-primary/90 text-white">
-            <Plus className="h-4 w-4 mr-2" />
-            Добавить вакансию
-          </Button>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {vacancies.map((vacancy) => (
+            <VacancyCard 
+              key={vacancy.id} 
+              vacancy={vacancy} 
+              onView={handleViewVacancy}
+            />
+          ))}
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {vacancies.map((vacancy, index) => (
-          <VacancyCard 
-            key={vacancy.id} 
-            vacancy={{
-              ...vacancy,
-              type: vacancy.type // Тип остается на английском, так как он приходит из данных
-            }} 
-            onView={handleViewVacancy}
-          />
-        ))}
-      </div>
+      )}
       
       {selectedVacancy && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -132,11 +102,6 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
                   ))}
                 </div>
               </div>
-            </div>
-            
-            <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline">Закрыть</Button>
-              <Button className="bg-primary hover:bg-primary/90 text-white">Найти кандидатов</Button>
             </div>
           </DialogContent>
         </Dialog>

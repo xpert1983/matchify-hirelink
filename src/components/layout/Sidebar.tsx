@@ -1,150 +1,192 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Briefcase, Users, CheckSquare, Settings, LogOut } from 'lucide-react';
+import { 
+  BarChart, 
+  Briefcase, 
+  FileText, 
+  Home, 
+  LayoutDashboard, 
+  Handshake,
+  Settings,
+  Users,
+  User,
+  Search,
+  LogOut
+} from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
+import { useSidebar } from '@/components/ui/sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  Sidebar as UISidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
 
-type SidebarContextType = {
-  isOpen: boolean;
-  toggle: () => void;
-  close: () => void;
-};
+export { useSidebar } from '@/components/ui/sidebar';
 
-const SidebarContext = createContext<SidebarContextType>({
-  isOpen: false,
-  toggle: () => {},
-  close: () => {},
-});
-
-export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => setIsOpen(prev => !prev);
-  const close = () => setIsOpen(false);
-
+export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SidebarContext.Provider value={{ isOpen, toggle, close }}>
+    <div className="min-h-screen flex w-full">
       {children}
-    </SidebarContext.Provider>
+    </div>
   );
 };
 
-export const useSidebar = () => useContext(SidebarContext);
-
-export const SidebarTrigger = () => {
-  const { toggle, isOpen } = useSidebar();
-  
-  return (
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      className="h-9 w-9" 
-      onClick={toggle}
-      aria-label="Открыть меню"
-    >
-      {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-    </Button>
-  );
-};
-
-export const Sidebar = () => {
-  const { isOpen, close } = useSidebar();
+export const Sidebar: React.FC = () => {
   const location = useLocation();
+  const { openMobile, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
 
-  const navItems = [
-    { path: '/', label: 'Панель управления', icon: LayoutDashboard },
-    { path: '/vacancies', label: 'Вакансии', icon: Briefcase },
-    { path: '/candidates', label: 'Кандидаты', icon: Users },
-    { path: '/matches', label: 'Подборки', icon: CheckSquare },
-  ];
+  // Close mobile sidebar when route changes
+  React.useEffect(() => {
+    if (isMobile && openMobile) {
+      setOpenMobile(false);
+    }
+  }, [location.pathname, isMobile, openMobile, setOpenMobile]);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <>
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-xs z-40 md:hidden transition-all animate-fade-in" 
-          onClick={close}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Sidebar */}
-      <aside 
-        className={cn(
-          "fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-border transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          "flex flex-col shadow-subtle"
-        )}
+      <UISidebar
+        className="border-r"
+        collapsible="offcanvas"
+        open={openMobile}
       >
-        <div className="flex items-center justify-between p-4 h-[62px] border-b border-border">
-          <Link to="/" className="flex items-center gap-2" onClick={close}>
-            <div className="w-8 h-8 flex items-center justify-center rounded-md bg-primary text-white font-semibold">
-              РЛ
+        <SidebarHeader className="flex h-[80px] items-center border-b px-6">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
+              <Handshake className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-semibold">РекрутЛинк</span>
-          </Link>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden h-8 w-8" 
-            onClick={close}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-        
-        <nav className="flex-1 overflow-y-auto py-6 px-3">
-          <ul className="space-y-1">
-            {navItems.map((item) => (
-              <li key={item.path}>
-                <Link 
-                  to={item.path} 
-                  onClick={close}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium",
-                    isActive(item.path) 
-                      ? "bg-primary/10 text-primary" 
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  <item.icon className={cn(
-                    "h-5 w-5 shrink-0", 
-                    isActive(item.path) ? "text-primary" : "text-muted-foreground"
-                  )} />
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        
-        <div className="p-3 border-t border-border">
-          <ul className="space-y-1">
-            <li>
-              <Link 
-                to="/settings" 
-                onClick={close}
-                className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-              >
-                <Settings className="h-5 w-5 shrink-0 text-muted-foreground" />
-                Настройки
-              </Link>
-            </li>
-            <li>
-              <button 
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-              >
-                <LogOut className="h-5 w-5 shrink-0 text-muted-foreground" />
-                Выйти
-              </button>
-            </li>
-          </ul>
-        </div>
-      </aside>
+            <span className="text-xl font-bold">HireLink</span>
+          </div>
+          <SidebarTrigger className="ml-auto md:hidden" />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Навигация</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/dashboard")}>
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="h-4 w-4" />
+                      <span>Дашборд</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/vacancies")}>
+                    <Link to="/vacancies">
+                      <Briefcase className="h-4 w-4" />
+                      <span>Вакансии</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/candidates")}>
+                    <Link to="/candidates">
+                      <Users className="h-4 w-4" />
+                      <span>Кандидаты</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/matches")}>
+                    <Link to="/matches">
+                      <Handshake className="h-4 w-4" />
+                      <span>Подборки</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          
+          <SidebarGroup>
+            <SidebarGroupLabel>Аналитика</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link to="#">
+                      <BarChart className="h-4 w-4" />
+                      <span>Отчеты</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link to="#">
+                      <Search className="h-4 w-4" />
+                      <span>Расширенный поиск</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          
+          <SidebarGroup>
+            <SidebarGroupLabel>Система</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={isActive("/settings")}>
+                    <Link to="/settings">
+                      <Settings className="h-4 w-4" />
+                      <span>Настройки</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link to="#">
+                      <User className="h-4 w-4" />
+                      <span>Профиль</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter className="mt-auto border-t p-4">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                <User className="h-4 w-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Анна Иванова</span>
+                <span className="text-xs text-muted-foreground">HR-менеджер</span>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="justify-start">
+              <LogOut className="h-4 w-4 mr-2" />
+              <span>Выйти</span>
+            </Button>
+          </div>
+        </SidebarFooter>
+        <SidebarRail />
+      </UISidebar>
     </>
   );
 };

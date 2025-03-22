@@ -1,27 +1,29 @@
 
 import React, { useState } from 'react';
 import CandidateCard, { CandidateProps } from './CandidateCard';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus, Filter, MapPin, Briefcase, GraduationCap, Mail, Phone } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Briefcase, Filter, GraduationCap, Mail, MapPin, Phone, Plus, Search } from 'lucide-react';
 
 interface CandidateListProps {
   candidates: CandidateProps[];
+  onViewCandidate?: (id: string) => void;
 }
 
-export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
+export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onViewCandidate }) => {
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateProps | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleViewCandidate = (id: string) => {
-    const candidate = candidates.find(c => c.id === id);
-    if (candidate) {
-      setSelectedCandidate(candidate);
-      setIsDialogOpen(true);
+    if (onViewCandidate) {
+      onViewCandidate(id);
+    } else {
+      const candidate = candidates.find(c => c.id === id);
+      if (candidate) {
+        setSelectedCandidate(candidate);
+        setIsDialogOpen(true);
+      }
     }
   };
 
@@ -48,53 +50,21 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
 
   return (
     <div className="space-y-6 animate-slide-in">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input 
-            placeholder="Поиск кандидатов..." 
-            className="pl-10"
-          />
+      {candidates.length === 0 ? (
+        <div className="text-center p-10 border rounded-lg bg-secondary/30">
+          <p className="text-muted-foreground">Нет кандидатов, соответствующих критериям поиска</p>
         </div>
-        
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <div className="flex items-center gap-2">
-            <Select defaultValue="all">
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Все кандидаты" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все кандидаты</SelectItem>
-                <SelectItem value="available">Доступные</SelectItem>
-                <SelectItem value="interviewing">На собеседовании</SelectItem>
-                <SelectItem value="hired">Нанятые</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button variant="outline" size="icon" className="h-10 w-10">
-              <Filter className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <Button className="ml-auto md:ml-2 bg-primary hover:bg-primary/90 text-white">
-            <Plus className="h-4 w-4 mr-2" />
-            Добавить кандидата
-          </Button>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {candidates.map((candidate) => (
+            <CandidateCard 
+              key={candidate.id} 
+              candidate={candidate}
+              onView={handleViewCandidate}
+            />
+          ))}
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {candidates.map((candidate) => (
-          <CandidateCard 
-            key={candidate.id} 
-            candidate={{
-              ...candidate,
-              status: candidate.status // Статус остается на английском, так как он приходит из данных
-            }}
-            onView={handleViewCandidate}
-          />
-        ))}
-      </div>
+      )}
       
       {selectedCandidate && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -156,11 +126,6 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates }) => {
                   ))}
                 </div>
               </div>
-            </div>
-            
-            <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline">Закрыть</Button>
-              <Button className="bg-primary hover:bg-primary/90 text-white">Найти вакансии</Button>
             </div>
           </DialogContent>
         </Dialog>
