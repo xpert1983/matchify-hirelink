@@ -223,7 +223,7 @@ const Vacancies = () => {
 
   return (
     <Layout>
-      <div className="space-y-6 max-w-[95%] mx-auto">
+      <div className="space-y-6 w-full mx-auto">
         {isDetailView ? (
           <div className="space-y-6">
             <div className="flex items-center">

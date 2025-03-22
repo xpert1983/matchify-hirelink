@@ -39,8 +39,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Sidebar />
       <div className="flex-1">
         <Header />
-        <main className="pt-[80px] md:pl-64 transition-all duration-300 min-h-screen">
-          <div className="p-6 max-w-screen-2xl mx-auto">
+        <main className="pt-[80px] md:pl-0 transition-all duration-300 min-h-screen">
+          <div className="p-4 sm:p-6 max-w-full mx-auto">
             {children}
           </div>
         </main>
