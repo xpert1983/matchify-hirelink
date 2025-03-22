@@ -8,12 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock, Mail, Phone, Globe } from "lucide-react";
 import { VacancyProps } from './VacancyCard';
+import { VacancyStatus } from './VacancyStatusBadge';
 
 // Define an extended interface that includes all the properties needed by VacancyDetail
 interface ExtendedVacancyProps extends VacancyProps {
   requirements?: string[];
   responsibilities?: string[];
-  status?: string;
+  status?: VacancyStatus;
   department?: string;
   experienceRequired?: string;
   postedDate?: string;

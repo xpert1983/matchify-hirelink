@@ -17,12 +17,13 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { VacancyStatus } from '@/components/vacancies/VacancyStatusBadge';
 
 // Интерфейс с расширенными свойствами для VacancyDetail
 interface ExtendedVacancyProps extends VacancyProps {
   requirements?: string[];
   responsibilities?: string[];
-  status?: string;
+  status?: VacancyStatus;
   department?: string;
   experienceRequired?: string;
   postedDate?: string;
@@ -114,7 +115,7 @@ const Vacancies = () => {
     ...vacancy,
     type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote",
     postedDate: vacancy.posted,
-    status: Math.random() > 0.7 ? 'paused' : Math.random() > 0.4 ? 'active' : Math.random() > 0.2 ? 'closed' : 'draft',
+    status: (Math.random() > 0.7 ? 'paused' : Math.random() > 0.4 ? 'active' : Math.random() > 0.2 ? 'closed' : 'draft') as VacancyStatus,
     department: ['Разработка', 'Дизайн', 'Маркетинг', 'Продажи', 'HR'][Math.floor(Math.random() * 5)],
     experienceRequired: ['Нет опыта', 'От 1 года', 'От 3 лет', 'От 5 лет'][Math.floor(Math.random() * 4)],
     selected: selectedIds.includes(vacancy.id)

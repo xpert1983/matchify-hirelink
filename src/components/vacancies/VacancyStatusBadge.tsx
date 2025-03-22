@@ -3,7 +3,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Clock, CheckCircle, AlertCircle, PauseCircle } from 'lucide-react';
 
-type VacancyStatus = 'active' | 'paused' | 'closed' | 'draft';
+export type VacancyStatus = 'active' | 'paused' | 'closed' | 'draft';
 
 interface VacancyStatusBadgeProps {
   status: VacancyStatus;

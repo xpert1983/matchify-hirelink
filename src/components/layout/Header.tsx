@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Search, Settings, User, HelpCircle, LogOut, Menu, Bell } from 'lucide-react';
-import DarkModeToggle from './DarkModeToggle';
+import { DarkModeToggle } from './DarkModeToggle';
 import NotificationCenter from '../notifications/NotificationCenter';
 import { Notification } from '../notifications/NotificationCenter';
 
