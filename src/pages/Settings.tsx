@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
@@ -11,8 +11,30 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Bell, Shield, User, Mail, Lock, Globe, CreditCard, HelpCircle, LogOut } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
+import { useToast } from '@/components/ui/use-toast';
 
 const Settings: React.FC = () => {
+  const { theme, setTheme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(theme === 'dark');
+  const { toast } = useToast();
+
+  useEffect(() => {
+    setIsDarkMode(theme === 'dark');
+  }, [theme]);
+
+  const handleThemeToggle = (checked: boolean) => {
+    setIsDarkMode(checked);
+    setTheme(checked ? 'dark' : 'light');
+  };
+
+  const handleSaveChanges = () => {
+    toast({
+      title: "Настройки сохранены",
+      description: "Изменения применены успешно",
+    });
+  };
+
   return (
     <Layout>
       <Card>
@@ -119,7 +141,7 @@ const Settings: React.FC = () => {
             <TabsContent value="preferences" className="space-y-2">
               <div className="grid gap-4">
                 <div className="space-y-1">
-                  <Label htmlFor="language">Язык</Label>
+                  <Label htmlFor="language">Яз��к</Label>
                   <Select>
                     <SelectTrigger id="language">
                       <SelectValue placeholder="Русский" />
@@ -135,7 +157,11 @@ const Settings: React.FC = () => {
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-medium leading-none">Темная тема</h4>
                   </div>
-                  <Switch id="dark-mode" />
+                  <Switch 
+                    id="dark-mode" 
+                    checked={isDarkMode}
+                    onCheckedChange={handleThemeToggle}
+                  />
                 </div>
               </div>
             </TabsContent>
@@ -180,7 +206,7 @@ const Settings: React.FC = () => {
           </Tabs>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button variant="outline">Сохранить изменения</Button>
+          <Button variant="outline" onClick={handleSaveChanges}>Сохранить изменения</Button>
         </CardFooter>
       </Card>
     </Layout>
