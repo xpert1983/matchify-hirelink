@@ -14,45 +14,20 @@ import {
 import { Search, Settings, User, HelpCircle, LogOut, Menu, Bell } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
 import NotificationCenter from '../notifications/NotificationCenter';
-import { Notification } from '../notifications/NotificationCenter';
+import NotificationSettings from '../notifications/NotificationSettings';
+import { useNotifications } from '@/hooks/use-notifications';
 
 export const Header = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      title: 'Новый кандидат',
-      message: 'Петр Иванов откликнулся на вакансию "Frontend Developer"',
-      time: '10 минут назад',
-      read: false,
-      type: 'candidate'
-    },
-    {
-      id: '2',
-      title: 'Собеседование запланировано',
-      message: 'Собеседование с Анной Смирновой в 15:00',
-      time: '1 час назад',
-      read: false,
-      type: 'interview'
-    },
-    {
-      id: '3',
-      title: 'Вакансия закрыта',
-      message: 'Вакансия "Product Manager" была закрыта',
-      time: '2 часа назад',
-      read: true,
-      type: 'vacancy'
-    },
-    {
-      id: '4',
-      title: 'Обновление системы',
-      message: 'Система успешно обновлена до версии 2.1.0',
-      time: 'вчера',
-      read: true,
-      type: 'system'
-    }
-  ]);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  
+  const { 
+    notifications, 
+    markAsRead, 
+    markAllAsRead,
+    unreadCount
+  } = useNotifications();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,19 +43,15 @@ export const Header = () => {
   }, []);
 
   const handleReadNotification = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id 
-          ? { ...notification, read: true } 
-          : notification
-      )
-    );
+    markAsRead(id);
   };
 
   const handleReadAllNotifications = () => {
-    setNotifications(prev => 
-      prev.map(notification => ({ ...notification, read: true }))
-    );
+    markAllAsRead();
+  };
+
+  const handleOpenSettings = () => {
+    setIsSettingsOpen(true);
   };
 
   return (
@@ -113,6 +84,8 @@ export const Header = () => {
             notifications={notifications}
             onReadNotification={handleReadNotification}
             onReadAll={handleReadAllNotifications}
+            onOpenSettings={handleOpenSettings}
+            unreadCount={unreadCount}
           />
           
           <DarkModeToggle />
@@ -155,6 +128,11 @@ export const Header = () => {
           </DropdownMenu>
         </div>
       </div>
+      
+      <NotificationSettings 
+        open={isSettingsOpen} 
+        onOpenChange={setIsSettingsOpen} 
+      />
     </header>
   );
 };

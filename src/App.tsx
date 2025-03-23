@@ -15,8 +15,23 @@ import CandidateForm from "./pages/CandidateForm";
 import Matches from "./pages/Matches";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import HiringPipeline from "./components/hiring-funnel/HiringPipeline";
+import { lazy, Suspense } from "react";
 
-const queryClient = new QueryClient();
+// Lazy-loaded pages for better performance
+const Analytics = lazy(() => import("./pages/Analytics"));
+const Reports = lazy(() => import("./pages/Reports"));
+const Calendar = lazy(() => import("./pages/Calendar"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const App = () => (
   <ThemeProvider defaultTheme="system">
@@ -26,17 +41,23 @@ const App = () => (
           <Toaster />
           <Sonner position="top-center" />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/vacancies" element={<Vacancies />} />
-              <Route path="/vacancies/new" element={<VacancyForm />} />
-              <Route path="/candidates" element={<Candidates />} />
-              <Route path="/candidates/new" element={<CandidateForm />} />
-              <Route path="/matches" element={<Matches />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Загрузка...</div>}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/vacancies" element={<Vacancies />} />
+                <Route path="/vacancies/new" element={<VacancyForm />} />
+                <Route path="/vacancies/:id/pipeline" element={<HiringPipeline />} />
+                <Route path="/candidates" element={<Candidates />} />
+                <Route path="/candidates/new" element={<CandidateForm />} />
+                <Route path="/matches" element={<Matches />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </SidebarProvider>
       </TooltipProvider>

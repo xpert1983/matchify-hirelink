@@ -30,6 +30,7 @@ export interface Notification {
 
 interface NotificationCenterProps {
   notifications: Notification[];
+  unreadCount: number;
   onReadNotification: (id: string) => void;
   onReadAll: () => void;
   onOpenSettings?: () => void;
@@ -37,14 +38,13 @@ interface NotificationCenterProps {
 
 const NotificationCenter: React.FC<NotificationCenterProps> = ({
   notifications,
+  unreadCount,
   onReadNotification,
   onReadAll,
   onOpenSettings
 }) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
-
-  const unreadCount = notifications.filter(n => !n.read).length;
   
   const filteredNotifications = activeTab === 'all'
     ? notifications
