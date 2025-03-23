@@ -9,7 +9,9 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Vacancies from "./pages/Vacancies";
+import VacancyForm from "./pages/VacancyForm";
 import Candidates from "./pages/Candidates";
+import CandidateForm from "./pages/CandidateForm";
 import Matches from "./pages/Matches";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -28,7 +30,9 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/vacancies" element={<Vacancies />} />
+              <Route path="/vacancies/new" element={<VacancyForm />} />
               <Route path="/candidates" element={<Candidates />} />
+              <Route path="/candidates/new" element={<CandidateForm />} />
               <Route path="/matches" element={<Matches />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />

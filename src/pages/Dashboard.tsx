@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -48,18 +47,14 @@ const Dashboard = () => {
 
   // Handler for "New Vacancy" button
   const handleNewVacancy = () => {
-    toast.success('Переход к созданию вакансии', {
-      description: 'Функционал находится в разработке'
-    });
-    navigate('/vacancies');
+    toast.success('Переход к созданию вакансии');
+    navigate('/vacancies/new');
   };
 
   // Handler for "New Candidate" button
   const handleNewCandidate = () => {
-    toast.success('Переход к созданию кандидата', {
-      description: 'Функционал находится в разработке'
-    });
-    navigate('/candidates');
+    toast.success('Переход к созданию кандидата');
+    navigate('/candidates/new');
   };
 
   // Quick actions handlers
