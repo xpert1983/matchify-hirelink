@@ -7,7 +7,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { Download, FileText, FilePdf, FileJson } from 'lucide-react';
+import { Download, FileText, File } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface PDFExporterProps {
@@ -121,7 +121,7 @@ const PDFExporter: React.FC<PDFExporterProps> = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleExportPDF}>
-          <FilePdf className="h-4 w-4 mr-2" />
+          <File className="h-4 w-4 mr-2" />
           <span>Экспорт в PDF</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleExportHTML}>
@@ -129,7 +129,7 @@ const PDFExporter: React.FC<PDFExporterProps> = ({
           <span>Экспорт в HTML</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleExportJSON}>
-          <FileJson className="h-4 w-4 mr-2" />
+          <File className="h-4 w-4 mr-2" />
           <span>Экспорт в JSON</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

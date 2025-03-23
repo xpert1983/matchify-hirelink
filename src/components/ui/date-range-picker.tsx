@@ -14,8 +14,8 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 
 interface DateRangePickerProps {
-  value: DateRange;
-  onChange: (range: DateRange) => void;
+  value: DateRange | { from: Date; to: Date };
+  onChange: (range: DateRange | { from: Date; to: Date }) => void;
   className?: string;
 }
 
@@ -56,8 +56,8 @@ export function DateRangePicker({
             initialFocus
             mode="range"
             defaultMonth={value?.from}
-            selected={value}
-            onSelect={onChange}
+            selected={value as DateRange}
+            onSelect={onChange as (range: DateRange | undefined) => void}
             numberOfMonths={2}
           />
         </PopoverContent>

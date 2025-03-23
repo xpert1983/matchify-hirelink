@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,9 +22,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import DashboardStats from '@/components/dashboard/DashboardStats';
+import { DateRange } from 'react-day-picker';
 
 const Analytics = () => {
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     to: new Date()
   });
@@ -85,6 +85,12 @@ const Analytics = () => {
     { month: 'Июн', rate: 1.3 },
   ];
 
+  const handleDateRangeChange = (range: DateRange) => {
+    if (range?.from) {
+      setDateRange(range);
+    }
+  };
+
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -111,7 +117,7 @@ const Analytics = () => {
             
             <DateRangePicker 
               value={dateRange} 
-              onChange={setDateRange} 
+              onChange={handleDateRangeChange} 
             />
           </div>
         </div>
