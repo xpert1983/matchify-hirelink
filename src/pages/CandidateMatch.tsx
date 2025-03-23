@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -110,21 +109,18 @@ const CandidateMatch = () => {
   const vacancyId = params.get('vacancyId');
 
   useEffect(() => {
-    // Конвертируем данные для кандидатов
     const typedCandidates = candidatesData.map(candidate => ({
       ...candidate,
       status: candidate.status as "Available" | "Interviewing" | "Hired" | "Not Available"
     }));
     setCandidates(typedCandidates);
 
-    // Конвертируем данные для вакансий
     const typedVacancies = vacanciesData.map(vacancy => ({
       ...vacancy,
       type: vacancy.type as "Full-time" | "Part-time" | "Contract" | "Remote"
     }));
     setVacancies(typedVacancies);
 
-    // Определяем, что мы сопоставляем, на основе параметров URL
     if (candidateId) {
       setSelectedCandidateId(candidateId);
       setMatchType('candidate-to-vacancies');
@@ -137,29 +133,23 @@ const CandidateMatch = () => {
   const selectedCandidate = candidates.find(c => c.id === selectedCandidateId);
   const selectedVacancy = vacancies.find(v => v.id === selectedVacancyId);
   
-  // Функция для расчета совпадения (очень упрощенная)
   const calculateMatch = (candidate: any, vacancy: any) => {
-    // Совпадение навыков: количество совпадающих навыков делим на общее количество уникальных навыков
     const uniqueSkills = new Set([...candidate.skills, ...vacancy.skills]);
     const commonSkills = candidate.skills.filter((skill: string) => vacancy.skills.includes(skill));
     const skillsMatch = Math.round((commonSkills.length / uniqueSkills.size) * 100);
     
-    // Совпадение опыта (упрощенно)
     const candidateExp = parseInt(candidate.experience.replace(/\D/g, '')) || 0;
-    const requiredExp = Math.floor(Math.random() * 5) + 1; // для демо
+    const requiredExp = Math.floor(Math.random() * 5) + 1;
     const expDiff = Math.abs(candidateExp - requiredExp);
     const expMatch = Math.max(0, 100 - expDiff * 20);
     
-    // Совпадение локации (упрощенно)
     const locationMatch = candidate.location.includes('Москва') || candidate.location.includes('Санкт-Петербург') ? 90 : 50;
     
-    // Совпадение зарплаты (упрощенно)
     const vacancySalary = parseInt(vacancy.salary.replace(/\D/g, '')) || 0;
-    const candidateSalary = Math.floor(Math.random() * 150000) + 50000; // для демо
+    const candidateSalary = Math.floor(Math.random() * 150000) + 50000;
     const salaryDiff = Math.abs(candidateSalary - vacancySalary) / vacancySalary;
     const salaryMatch = Math.max(0, 100 - salaryDiff * 100);
     
-    // Общий счет - средневзвешенное значение
     const score = Math.round(skillsMatch * 0.5 + expMatch * 0.3 + locationMatch * 0.1 + salaryMatch * 0.1);
     
     return {
@@ -171,7 +161,6 @@ const CandidateMatch = () => {
     };
   };
 
-  // Получаем список совпадений в зависимости от типа сопоставления
   const getMatches = () => {
     if (matchType === 'candidate-to-vacancies' && selectedCandidate) {
       const matches = vacancies.map(vacancy => ({
@@ -179,7 +168,6 @@ const CandidateMatch = () => {
         matchDetails: calculateMatch(selectedCandidate, vacancy)
       }));
       
-      // Сортируем результаты
       return sortMatches(matches);
     } else if (matchType === 'vacancy-to-candidates' && selectedVacancy) {
       const matches = candidates.map(candidate => ({
@@ -187,14 +175,12 @@ const CandidateMatch = () => {
         matchDetails: calculateMatch(candidate, selectedVacancy)
       }));
       
-      // Сортируем результаты
       return sortMatches(matches);
     }
     
     return [];
   };
 
-  // Сортировка результатов
   const sortMatches = (matches: any[]) => {
     switch (sortMethod) {
       case 'match':
@@ -233,17 +219,17 @@ const CandidateMatch = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Available':
-        return <Badge variant="success">Доступен</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600">Доступен</Badge>;
       case 'Interviewing':
-        return <Badge variant="warning">На собеседовании</Badge>;
+        return <Badge className="bg-yellow-500 hover:bg-yellow-600">На собеседовании</Badge>;
       case 'Hired':
         return <Badge>Нанят</Badge>;
       case 'Not Available':
         return <Badge variant="outline">Недоступен</Badge>;
       case 'active':
-        return <Badge variant="success">Активна</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600">Активна</Badge>;
       case 'paused':
-        return <Badge variant="warning">Приостановлена</Badge>;
+        return <Badge className="bg-yellow-500 hover:bg-yellow-600">Приостановлена</Badge>;
       case 'closed':
         return <Badge variant="outline">Закрыта</Badge>;
       case 'draft':
@@ -534,7 +520,7 @@ const CandidateMatch = () => {
                     <p className="text-muted-foreground">{selectedVacancy.company}</p>
                     <div className="mt-2 flex items-center space-x-2">
                       <Badge variant="outline">{selectedVacancy.type}</Badge>
-                      {getStatusBadge('active')} {/* Для демо */}
+                      {getStatusBadge('active')}
                     </div>
                   </div>
                   

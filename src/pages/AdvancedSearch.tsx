@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -71,7 +70,7 @@ const AdvancedSearch = () => {
         const matchesSearch = searchTerm === '' || 
                              candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              candidate.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                             candidate.description.toLowerCase().includes(searchTerm.toLowerCase());
+                             candidate.education.toLowerCase().includes(searchTerm.toLowerCase());
         
         // Фильтрация по навыкам
         const matchesSkills = selectedSkills.length === 0 || 
@@ -191,6 +190,21 @@ const AdvancedSearch = () => {
 
   const formatSalary = (value: number) => {
     return new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'Available':
+        return <Badge className="bg-green-500 hover:bg-green-600">Доступен</Badge>;
+      case 'Interviewing':
+        return <Badge className="bg-yellow-500 hover:bg-yellow-600">На собеседовании</Badge>;
+      case 'Hired':
+        return <Badge>Нанят</Badge>;
+      case 'Not Available':
+        return <Badge variant="outline">Недоступен</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
   };
 
   return (
@@ -330,7 +344,7 @@ const AdvancedSearch = () => {
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <Label>Зарплата</Label>
+                        <Label>Зар��лата</Label>
                         <div className="px-2">
                           <Slider
                             defaultValue={[30000, 250000]}
@@ -497,13 +511,7 @@ const AdvancedSearch = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={
-                              candidate.status === 'Available' ? 'success' : 
-                              candidate.status === 'Interviewing' ? 'warning' : 
-                              candidate.status === 'Hired' ? 'default' : 'outline'
-                            }>
-                              {candidate.status}
-                            </Badge>
+                            {getStatusBadge(candidate.status)}
                           </TableCell>
                           <TableCell>
                             <Button variant="ghost" size="sm" onClick={() => handleViewItem(candidate.id)}>
