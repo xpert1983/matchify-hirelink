@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
@@ -195,6 +196,14 @@ const Vacancies = () => {
   const handleAddInterview = () => {
     toast.info('Функция добавления собеседования находится в разработке');
   };
+  
+  const handleCreateVacancy = () => {
+    navigate('/vacancies/new');
+  };
+
+  const handleFindCandidates = (vacancyId: string) => {
+    navigate(`/candidate-match?vacancyId=${vacancyId}`);
+  };
 
   const handleExportData = () => {
     return sortedVacancies;
@@ -238,7 +247,16 @@ const Vacancies = () => {
               </Button>
               <h1 className="text-3xl font-bold tracking-tight">Детали вакансии</h1>
             </div>
-            {selectedVacancy && <VacancyDetail vacancy={selectedVacancy} />}
+            {selectedVacancy && (
+              <>
+                <VacancyDetail vacancy={selectedVacancy} />
+                <div className="flex justify-center mt-6">
+                  <Button className="w-full max-w-md" onClick={() => handleFindCandidates(selectedVacancy.id)}>
+                    Найти подходящих кандидатов
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <>
@@ -253,7 +271,7 @@ const Vacancies = () => {
                   onExport={handleExportData}
                   onImport={handleImportData}
                 />
-                <Button className="bg-primary hover:bg-primary/90 text-white">
+                <Button className="bg-primary hover:bg-primary/90 text-white" onClick={handleCreateVacancy}>
                   <Plus className="h-4 w-4 mr-2" />
                   Добавить вакансию
                 </Button>
@@ -299,7 +317,8 @@ const Vacancies = () => {
                 <VacancyList 
                   vacancies={sortedVacancies.map(v => ({
                     ...v,
-                    selected: selectedIds.includes(v.id)
+                    selected: selectedIds.includes(v.id),
+                    onFindCandidates: () => handleFindCandidates(v.id)
                   }))}
                   onViewVacancy={handleViewVacancy}
                   onSelectVacancy={handleVacancySelect}

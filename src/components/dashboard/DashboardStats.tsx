@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Briefcase, Users, CheckSquare, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface StatCardProps {
   title: string;
@@ -9,11 +10,15 @@ interface StatCardProps {
   change: string;
   icon: React.ReactNode;
   positive?: boolean;
+  onClick: () => void;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, positive = true }) => {
+const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, positive = true, onClick }) => {
   return (
-    <Card className="p-6 hover-lift transition-all duration-300 hover:shadow-elevated">
+    <Card 
+      className="p-6 hover-lift transition-all duration-300 hover:shadow-elevated cursor-pointer" 
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
@@ -34,6 +39,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, positiv
 };
 
 export const DashboardStats = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in">
       <StatCard 
@@ -41,18 +48,21 @@ export const DashboardStats = () => {
         value="24"
         change="+12% к прошлому месяцу"
         icon={<Briefcase className="h-5 w-5 text-primary" />}
+        onClick={() => navigate('/vacancies')}
       />
       <StatCard 
         title="Активные кандидаты"
         value="128"
         change="+18% к прошлому месяцу"
         icon={<Users className="h-5 w-5 text-primary" />}
+        onClick={() => navigate('/candidates')}
       />
       <StatCard 
         title="Успешные подборки"
         value="56"
         change="+8% к прошлому месяцу"
         icon={<CheckSquare className="h-5 w-5 text-primary" />}
+        onClick={() => navigate('/matches')}
       />
       <StatCard 
         title="Ср. время найма"
@@ -60,6 +70,7 @@ export const DashboardStats = () => {
         change="-2 дня к прошлому месяцу"
         icon={<TrendingUp className="h-5 w-5 text-primary" />}
         positive={true}
+        onClick={() => navigate('/reports')}
       />
     </div>
   );

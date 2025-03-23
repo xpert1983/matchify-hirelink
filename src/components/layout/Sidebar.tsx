@@ -113,16 +113,16 @@ export const Sidebar: React.FC = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="#">
+                <SidebarMenuButton asChild isActive={isActive("/reports")}>
+                  <Link to="/reports">
                     <BarChart className="h-4 w-4" />
                     <span>Отчеты</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="#">
+                <SidebarMenuButton asChild isActive={isActive("/advanced-search")}>
+                  <Link to="/advanced-search">
                     <Search className="h-4 w-4" />
                     <span>Расширенный поиск</span>
                   </Link>
@@ -145,8 +145,8 @@ export const Sidebar: React.FC = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="#">
+                <SidebarMenuButton asChild isActive={isActive("/profile")}>
+                  <Link to="/profile">
                     <User className="h-4 w-4" />
                     <span>Профиль</span>
                   </Link>

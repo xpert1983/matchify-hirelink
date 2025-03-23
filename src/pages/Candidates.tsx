@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CandidateDetail from '@/components/candidates/CandidateDetail';
+import { toast } from 'sonner';
 
 const Candidates = () => {
   const location = useLocation();
@@ -69,6 +70,16 @@ const Candidates = () => {
   const handleBackToList = () => {
     navigate('/candidates');
   };
+  
+  // Function to create a new candidate
+  const handleCreateCandidate = () => {
+    navigate('/candidates/new');
+  };
+  
+  // Function to find vacancies for a candidate
+  const handleFindVacancies = (id: string) => {
+    navigate(`/candidate-match?candidateId=${id}`);
+  };
 
   // Determine if we're in detail view or list view
   const isDetailView = !!selectedCandidate;
@@ -90,7 +101,19 @@ const Candidates = () => {
               </Button>
               <h1 className="text-3xl font-bold tracking-tight">Профиль кандидата</h1>
             </div>
-            {selectedCandidate && <CandidateDetail candidate={selectedCandidate} />}
+            {selectedCandidate && (
+              <>
+                <CandidateDetail candidate={selectedCandidate} />
+                <div className="flex justify-center mt-6">
+                  <Button 
+                    className="w-full max-w-md" 
+                    onClick={() => handleFindVacancies(selectedCandidate.id)}
+                  >
+                    Найти подходящие вакансии
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <>
@@ -99,7 +122,10 @@ const Candidates = () => {
                 <h1 className="text-3xl font-bold tracking-tight">Кандидаты</h1>
                 <p className="text-muted-foreground mt-1">Управление и отслеживание потенциальных сотрудников.</p>
               </div>
-              <Button className="bg-primary hover:bg-primary/90 text-white self-start sm:self-auto">
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-white self-start sm:self-auto"
+                onClick={handleCreateCandidate}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Добавить кандидата
               </Button>
@@ -155,7 +181,10 @@ const Candidates = () => {
             </div>
             
             <CandidateList 
-              candidates={sortedCandidates} 
+              candidates={sortedCandidates.map(candidate => ({
+                ...candidate,
+                onFindVacancies: () => handleFindVacancies(candidate.id)
+              }))}
               onViewCandidate={handleViewCandidate}
             />
           </>
