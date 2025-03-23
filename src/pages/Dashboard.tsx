@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import RecentMatches from '@/components/dashboard/RecentMatches';
@@ -8,8 +9,21 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { vacanciesData, candidatesData } from '@/lib/data';
 import { Progress } from '@/components/ui/progress';
+import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose
+} from '@/components/ui/dialog';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  
   // Calculate top skills based on vacancies
   const getTopSkills = () => {
     const skillsCount: Record<string, number> = {};
@@ -32,6 +46,48 @@ const Dashboard = () => {
   
   const topSkills = getTopSkills();
 
+  // Handler for "New Vacancy" button
+  const handleNewVacancy = () => {
+    toast.success('Переход к созданию вакансии', {
+      description: 'Функционал находится в разработке'
+    });
+    navigate('/vacancies');
+  };
+
+  // Handler for "New Candidate" button
+  const handleNewCandidate = () => {
+    toast.success('Переход к созданию кандидата', {
+      description: 'Функционал находится в разработке'
+    });
+    navigate('/candidates');
+  };
+
+  // Quick actions handlers
+  const handleViewCandidates = () => {
+    toast('Просмотр профилей кандидатов');
+    navigate('/candidates');
+  };
+
+  const handleUpdateVacancies = () => {
+    toast('Обновление данных вакансий');
+    navigate('/vacancies');
+  };
+
+  const handleScheduleInterviews = () => {
+    toast('Планирование собеседований', {
+      description: 'Открытие календаря собеседований'
+    });
+    // In a real app, this would navigate to an interview calendar page
+    // For now, we'll just show a dialog
+  };
+
+  const handleCreateReport = () => {
+    toast('Создание отчета', {
+      description: 'Начат процесс генерации отчета'
+    });
+    // In a real app, this would start a report generation process
+  };
+
   return (
     <Layout>
       <div className="space-y-8">
@@ -41,11 +97,11 @@ const Dashboard = () => {
             <p className="text-muted-foreground mt-1">Вот что происходит с вашим рекрутингом сегодня.</p>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleNewVacancy}>
               <Plus className="h-4 w-4 mr-2" />
               Новая вакансия
             </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
+            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white" onClick={handleNewCandidate}>
               <Plus className="h-4 w-4 mr-2" />
               Новый кандидат
             </Button>
@@ -87,18 +143,67 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start text-left">
+                  <Button variant="outline" className="w-full justify-start text-left" onClick={handleViewCandidates}>
                     Просмотреть новые профили кандидатов
                   </Button>
-                  <Button variant="outline" className="w-full justify-start text-left">
+                  <Button variant="outline" className="w-full justify-start text-left" onClick={handleUpdateVacancies}>
                     Обновить данные вакансий
                   </Button>
-                  <Button variant="outline" className="w-full justify-start text-left">
-                    Запланировать собеседования
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start text-left">
-                    Создать отчет о подборе
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left">
+                        Запланировать собеседования
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Планирование собеседований</DialogTitle>
+                        <DialogDescription>
+                          Здесь вы можете запланировать собеседования с кандидатами.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <p>Функционал календаря собеседований находится в разработке.</p>
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button>Закрыть</Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left">
+                        Создать отчет о подборе
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Создание отчета</DialogTitle>
+                        <DialogDescription>
+                          Генерация отчета о текущем процессе подбора.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <p>Выберите параметры для отчета:</p>
+                        <div className="mt-4 space-y-4">
+                          <div>
+                            <p className="text-sm font-medium mb-2">Период:</p>
+                            <Button variant="outline" size="sm" className="mr-2">Текущий месяц</Button>
+                            <Button variant="outline" size="sm" className="mr-2">Прошлый месяц</Button>
+                            <Button variant="outline" size="sm">Весь год</Button>
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="outline">Отмена</Button>
+                        </DialogClose>
+                        <Button onClick={handleCreateReport}>Создать отчет</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardContent>
             </Card>
