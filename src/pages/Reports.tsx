@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -11,9 +10,10 @@ import { Separator } from '@/components/ui/separator';
 import { BarChart, FileDown, FileText, Filter, Table as TableIcon, Mail, Printer, RefreshCcw } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
+import { DateRange } from 'react-day-picker';
 
 const Reports = () => {
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<DateRange | { from: Date; to: Date }>({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     to: new Date()
   });
@@ -92,6 +92,10 @@ const Reports = () => {
 
   const filteredReports = reports.filter(r => reportType === 'all' || r.category === reportType);
 
+  const handleDateRangeChange = (range: DateRange | { from: Date; to: Date }) => {
+    setDateRange(range);
+  };
+
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -136,7 +140,7 @@ const Reports = () => {
                 
                 <DateRangePicker 
                   value={dateRange} 
-                  onChange={setDateRange} 
+                  onChange={handleDateRangeChange} 
                 />
               </div>
               
@@ -219,7 +223,7 @@ const Reports = () => {
                       <label className="text-sm font-medium">Период</label>
                       <DateRangePicker 
                         value={dateRange} 
-                        onChange={setDateRange} 
+                        onChange={handleDateRangeChange} 
                       />
                     </div>
                     
