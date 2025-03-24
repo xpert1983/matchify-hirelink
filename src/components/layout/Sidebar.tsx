@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -63,15 +62,13 @@ export const Sidebar: React.FC = () => {
     return location.pathname === path;
   };
 
-  // Handler for menu link clicks
+  // Handler for menu link clicks - don't close the sidebar immediately
   const handleMenuLinkClick = (e: React.MouseEvent) => {
-    // Only close the menu on link click in mobile mode
-    // Don't stop event propagation to allow natural link navigation
+    // For mobile, add a longer delay before closing the sidebar
+    // to allow the navigation to register first
     if (isMobile) {
-      // Add a small delay to allow navigation to happen first
-      setTimeout(() => {
-        setOpenMobile(false);
-      }, 100);
+      // Don't close the menu immediately - wait for navigation
+      // The sidebar will be closed by the useEffect when the route changes
     }
   };
 

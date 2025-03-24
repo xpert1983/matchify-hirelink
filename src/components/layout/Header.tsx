@@ -27,9 +27,8 @@ const Header: React.FC = () => {
   };
 
   const toggleSidebar = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Simply toggle the sidebar without any additional logic
+    // Don't use preventDefault or stopPropagation here
+    // as they might be interfering with the normal event flow
     setOpenMobile(!openMobile);
   };
 
