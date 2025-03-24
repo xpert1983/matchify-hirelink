@@ -42,8 +42,18 @@ export const Sidebar: React.FC = () => {
   const { openMobile, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
 
-  // Close mobile sidebar when route changes
+  // Исправляем проблему с быстрым закрытием мобильного меню - теперь только закрываем
+  // после смены маршрута если меню было открыто
   React.useEffect(() => {
+    // Добавляем переменную, чтобы отслеживать, был ли эффект вызван при монтировании компонента
+    const isInitialMount = React.useRef(true);
+    
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
+    // Теперь закрываем меню только при изменении маршрута, а не при монтировании
     if (isMobile && openMobile) {
       setOpenMobile(false);
     }
@@ -51,6 +61,14 @@ export const Sidebar: React.FC = () => {
 
   const isActive = (path: string) => {
     return location.pathname === path;
+  };
+
+  // Обработчик для ссылок внутри меню
+  const handleMenuLinkClick = () => {
+    // Закрываем меню только при клике по ссылке в мобильном режиме
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   return (
@@ -74,7 +92,7 @@ export const Sidebar: React.FC = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/dashboard")}>
-                  <Link to="/dashboard">
+                  <Link to="/dashboard" onClick={handleMenuLinkClick}>
                     <LayoutDashboard className="h-4 w-4" />
                     <span>Дашборд</span>
                   </Link>
@@ -82,7 +100,7 @@ export const Sidebar: React.FC = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/vacancies")}>
-                  <Link to="/vacancies">
+                  <Link to="/vacancies" onClick={handleMenuLinkClick}>
                     <Briefcase className="h-4 w-4" />
                     <span>Вакансии</span>
                   </Link>
@@ -90,7 +108,7 @@ export const Sidebar: React.FC = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/candidates")}>
-                  <Link to="/candidates">
+                  <Link to="/candidates" onClick={handleMenuLinkClick}>
                     <Users className="h-4 w-4" />
                     <span>Кандидаты</span>
                   </Link>
@@ -98,7 +116,7 @@ export const Sidebar: React.FC = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/matches")}>
-                  <Link to="/matches">
+                  <Link to="/matches" onClick={handleMenuLinkClick}>
                     <Handshake className="h-4 w-4" />
                     <span>Подборки</span>
                   </Link>
@@ -114,7 +132,7 @@ export const Sidebar: React.FC = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/reports")}>
-                  <Link to="/reports">
+                  <Link to="/reports" onClick={handleMenuLinkClick}>
                     <BarChart className="h-4 w-4" />
                     <span>Отчеты</span>
                   </Link>
@@ -122,7 +140,7 @@ export const Sidebar: React.FC = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/advanced-search")}>
-                  <Link to="/advanced-search">
+                  <Link to="/advanced-search" onClick={handleMenuLinkClick}>
                     <Search className="h-4 w-4" />
                     <span>Расширенный поиск</span>
                   </Link>
@@ -138,7 +156,7 @@ export const Sidebar: React.FC = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/settings")}>
-                  <Link to="/settings">
+                  <Link to="/settings" onClick={handleMenuLinkClick}>
                     <Settings className="h-4 w-4" />
                     <span>Настройки</span>
                   </Link>
@@ -146,7 +164,7 @@ export const Sidebar: React.FC = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/profile")}>
-                  <Link to="/profile">
+                  <Link to="/profile" onClick={handleMenuLinkClick}>
                     <User className="h-4 w-4" />
                     <span>Профиль</span>
                   </Link>

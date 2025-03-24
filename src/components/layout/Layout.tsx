@@ -26,12 +26,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex w-full">
+    <div className="min-h-screen flex w-full overflow-hidden">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex-1 w-full overflow-hidden">
         <Header />
-        <main className="pt-[80px] md:pl-0 transition-all duration-300 min-h-screen">
-          <div className="p-4 sm:p-6 max-w-full mx-auto">
+        <main className="pt-[80px] md:pl-0 transition-all duration-300 min-h-screen w-full overflow-x-hidden">
+          <div className="p-4 sm:p-6 max-w-full mx-auto overflow-x-hidden">
             {children}
           </div>
         </main>

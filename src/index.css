@@ -76,6 +76,8 @@
   }
   html {
     -webkit-overflow-scrolling: touch;
+    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
+    width: 100%;
   }
 }
 
@@ -117,24 +119,129 @@
   }
 }
 
-/* Responsive adjustments */
+/* Улучшенная адаптивность для мобильных устройств */
 @media (max-width: 768px) {
+  /* Более эффективное управление контейнерами */
   .container {
     width: 100%;
     max-width: 100%;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 
-  /* Fix horizontal scroll on mobile */
+  /* Фиксированная ширина для предотвращения горизонтальной прокрутки */
   body {
     overflow-x: hidden;
     width: 100%;
+    box-sizing: border-box;
   }
 
-  /* Make sure content fits mobile screens */
+  /* Уменьшение размеров текста для лучшего отображения на маленьких экранах */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  h3 {
+    font-size: 1.125rem !important;
+  }
+  
+  /* Адаптивные отступы для мобильных устройств */
+  .p-4 {
+    padding: 0.75rem !important;
+  }
+  
+  .p-6 {
+    padding: 1rem !important;
+  }
+
+  /* Уменьшение отступов в карточках */
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  /* Принудительная ширина контента */
   .mobile-full-width {
     width: 100% !important;
     min-width: 0 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Уменьшение иконок на мобильных устройствах */
+  svg {
+    transform-origin: center;
+    transform: scale(0.85);
+  }
+  
+  /* Уменьшение отступов кнопок */
+  .btn, button {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* Улучшенное поведение таблиц на мобильных устройствах */
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* Дополнительный стиль для сверхмалых экранов */
+@media (max-width: 480px) {
+  /* Еще больше уменьшаем размер текста */
+  body {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Уменьшенные заголовки */
+  h1 {
+    font-size: 1.25rem !important;
+  }
+  
+  h2 {
+    font-size: 1.125rem !important;
+  }
+  
+  h3 {
+    font-size: 1rem !important;
+  }
+  
+  /* Меньшие отступы */
+  .p-4 {
+    padding: 0.5rem !important;
+  }
+  
+  .p-6 {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Улучшенная адаптивность компонентов */
+.responsive-card {
+  @apply w-full;
+}
+
+.responsive-grid {
+  @apply grid-cols-1;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    @apply grid-cols-2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    @apply grid-cols-3;
   }
 }
