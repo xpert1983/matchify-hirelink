@@ -18,6 +18,7 @@ export interface CandidateProps {
   phone: string;
   skills: string[];
   status: 'Available' | 'Interviewing' | 'Hired' | 'Not Available';
+  onFindVacancies?: (id: string) => void;
 }
 
 interface CandidateCardProps {
@@ -44,6 +45,12 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
       case 'Hired': return 'Нанят';
       case 'Not Available': return 'Недоступен';
       default: return status;
+    }
+  };
+
+  const handleFindVacancies = () => {
+    if (candidate.onFindVacancies) {
+      candidate.onFindVacancies(candidate.id);
     }
   };
 
@@ -123,6 +130,7 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
           <Button 
             size="sm"
             className="bg-primary hover:bg-primary/90 text-white"
+            onClick={handleFindVacancies}
           >
             Найти вакансии
           </Button>

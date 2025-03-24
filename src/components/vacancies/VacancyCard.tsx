@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -28,6 +27,7 @@ export interface VacancyProps {
   skills: string[];
   status?: 'active' | 'paused' | 'closed' | 'draft';
   selected?: boolean;
+  onFindCandidates?: (id: string) => void;
 }
 
 interface VacancyCardProps {
@@ -57,6 +57,12 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({
   const handleSelect = (checked: boolean) => {
     if (onSelect) {
       onSelect(vacancy.id, checked);
+    }
+  };
+
+  const handleFindCandidates = () => {
+    if (vacancy.onFindCandidates) {
+      vacancy.onFindCandidates(vacancy.id);
     }
   };
 
@@ -165,6 +171,7 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({
           <Button 
             size="sm"
             className="bg-primary hover:bg-primary/90 text-white h-8 px-2 text-xs"
+            onClick={handleFindCandidates}
           >
             Найти кандидатов
           </Button>
