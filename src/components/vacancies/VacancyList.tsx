@@ -73,7 +73,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({
       
       {selectedVacancy && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <div className="flex items-center gap-4">
                 <Avatar className="h-12 w-12 rounded-md bg-white border border-border">

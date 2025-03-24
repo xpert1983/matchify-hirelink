@@ -29,11 +29,11 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Available': return 'bg-green-100 text-green-800';
-      case 'Interviewing': return 'bg-blue-100 text-blue-800';
-      case 'Hired': return 'bg-purple-100 text-purple-800';
-      case 'Not Available': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Available': return 'badge-success';
+      case 'Interviewing': return 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100';
+      case 'Hired': return 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100';
+      case 'Not Available': return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
   };
 
@@ -55,7 +55,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
           <p className="text-muted-foreground">Нет кандидатов, соответствующих критериям поиска</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {candidates.map((candidate) => (
             <CandidateCard 
               key={candidate.id} 
@@ -68,7 +68,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
       
       {selectedCandidate && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 border-2 border-background">
@@ -78,7 +78,7 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
                 <div>
                   <div className="flex items-center gap-2">
                     <DialogTitle className="text-xl">{selectedCandidate.name}</DialogTitle>
-                    <Badge variant="outline" className={getStatusColor(selectedCandidate.status)}>
+                    <Badge className={getStatusColor(selectedCandidate.status)}>
                       {translateStatus(selectedCandidate.status)}
                     </Badge>
                   </div>

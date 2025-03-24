@@ -55,7 +55,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <UISidebar
-      className="border-r"
+      className="border-r z-50"
       collapsible="offcanvas"
     >
       <SidebarHeader className="flex h-[80px] items-center border-b px-6">

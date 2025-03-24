@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import { Sidebar } from './Sidebar';
-import { toast } from 'sonner';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -25,14 +24,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       }
     };
   }, [location.pathname]);
-
-  // Show welcome toast on first render
-  useEffect(() => {
-    toast('Welcome to HireLink', {
-      description: 'Your advanced tool for matching vacancies and candidates',
-      position: 'top-center',
-    });
-  }, []);
 
   return (
     <div className="min-h-screen flex w-full">

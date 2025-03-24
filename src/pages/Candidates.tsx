@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CandidateDetail from '@/components/candidates/CandidateDetail';
-import { toast } from 'sonner';
 
 const Candidates = () => {
   const location = useLocation();

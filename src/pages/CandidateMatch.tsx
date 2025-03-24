@@ -219,17 +219,17 @@ const CandidateMatch = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Available':
-        return <Badge className="bg-green-500 hover:bg-green-600">Доступен</Badge>;
+        return <Badge className="badge-success">Доступен</Badge>;
       case 'Interviewing':
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">На собеседовании</Badge>;
+        return <Badge className="badge-warning">На собеседовании</Badge>;
       case 'Hired':
         return <Badge>Нанят</Badge>;
       case 'Not Available':
         return <Badge variant="outline">Недоступен</Badge>;
       case 'active':
-        return <Badge className="bg-green-500 hover:bg-green-600">Активна</Badge>;
+        return <Badge className="badge-success">Активна</Badge>;
       case 'paused':
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">Приостановлена</Badge>;
+        return <Badge className="badge-warning">Приостановлена</Badge>;
       case 'closed':
         return <Badge variant="outline">Закрыта</Badge>;
       case 'draft':
@@ -242,8 +242,8 @@ const CandidateMatch = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <div className="flex items-center mb-2 sm:mb-0">
             <Button 
               variant="outline" 
               size="sm" 
@@ -253,14 +253,14 @@ const CandidateMatch = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Назад
             </Button>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               {matchType === 'candidate-to-vacancies' 
                 ? 'Подбор вакансий для кандидата' 
                 : 'Подбор кандидатов для вакансии'}
             </h1>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <Button variant="outline" size="sm" onClick={() => setSortMethod('match')}>
               По совпадению
             </Button>
