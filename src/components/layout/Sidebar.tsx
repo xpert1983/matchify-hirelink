@@ -42,10 +42,10 @@ export const Sidebar: React.FC = () => {
   const { openMobile, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
 
-  // Use a ref to track initial mount inside the component
+  // Create ref inside the component body
   const isInitialMount = React.useRef(true);
   
-  // Fixing the useEffect to properly handle route changes
+  // Fix the useEffect to properly handle route changes
   React.useEffect(() => {
     // Skip the effect on initial mount
     if (isInitialMount.current) {
@@ -64,10 +64,14 @@ export const Sidebar: React.FC = () => {
   };
 
   // Handler for menu link clicks
-  const handleMenuLinkClick = () => {
-    // Close the menu only on link click in mobile mode
+  const handleMenuLinkClick = (e: React.MouseEvent) => {
+    // Only close the menu on link click in mobile mode
+    // Don't stop event propagation to allow natural link navigation
     if (isMobile) {
-      setOpenMobile(false);
+      // Add a small delay to allow navigation to happen first
+      setTimeout(() => {
+        setOpenMobile(false);
+      }, 100);
     }
   };
 
