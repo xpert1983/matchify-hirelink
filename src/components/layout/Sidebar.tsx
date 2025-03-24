@@ -42,18 +42,18 @@ export const Sidebar: React.FC = () => {
   const { openMobile, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
 
-  // Исправляем проблему с быстрым закрытием мобильного меню - теперь только закрываем
-  // после смены маршрута если меню было открыто
+  // Use a ref to track initial mount inside the component
+  const isInitialMount = React.useRef(true);
+  
+  // Fixing the useEffect to properly handle route changes
   React.useEffect(() => {
-    // Добавляем переменную, чтобы отслеживать, был ли эффект вызван при монтировании компонента
-    const isInitialMount = React.useRef(true);
-    
+    // Skip the effect on initial mount
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
     
-    // Теперь закрываем меню только при изменении маршрута, а не при монтировании
+    // Close the menu only when route changes and in mobile mode
     if (isMobile && openMobile) {
       setOpenMobile(false);
     }
@@ -63,9 +63,9 @@ export const Sidebar: React.FC = () => {
     return location.pathname === path;
   };
 
-  // Обработчик для ссылок внутри меню
+  // Handler for menu link clicks
   const handleMenuLinkClick = () => {
-    // Закрываем меню только при клике по ссылке в мобильном режиме
+    // Close the menu only on link click in mobile mode
     if (isMobile) {
       setOpenMobile(false);
     }
