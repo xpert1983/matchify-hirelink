@@ -133,17 +133,24 @@
   }
 }
 
+/* Fix for dark mode buttons - using direct color values instead of @apply */
 .dark button.bg-primary {
-  @apply text-white;
+  color: white;
 }
 
 .dark button.bg-primary:hover {
-  @apply bg-primary/90 text-white;
+  background-color: hsl(var(--primary) / 0.9);
+  color: white;
 }
 
 /* Fix for dark mode buttons text contrast */
 .dark .btn-primary {
-  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .btn-primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
 }
 
 /* Responsive fixes */
