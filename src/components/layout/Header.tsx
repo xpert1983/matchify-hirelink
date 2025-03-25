@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { 
   Bell, 
   Menu, 
-  Search, 
-  X 
+  Search 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';

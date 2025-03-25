@@ -9,7 +9,189 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      candidate_vacancies: {
+        Row: {
+          candidate_id: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          stage: string | null
+          updated_at: string | null
+          vacancy_id: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          stage?: string | null
+          updated_at?: string | null
+          vacancy_id?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          stage?: string | null
+          updated_at?: string | null
+          vacancy_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "candidate_vacancies_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "candidate_vacancies_vacancy_id_fkey"
+            columns: ["vacancy_id"]
+            isOneToOne: false
+            referencedRelation: "vacancies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      candidates: {
+        Row: {
+          created_at: string | null
+          email: string
+          experience_years: number | null
+          first_name: string
+          id: string
+          last_name: string
+          phone: string | null
+          resume_url: string | null
+          skills: string[] | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          experience_years?: number | null
+          first_name: string
+          id?: string
+          last_name: string
+          phone?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          experience_years?: number | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      interviews: {
+        Row: {
+          candidate_id: string | null
+          created_at: string | null
+          id: string
+          interview_date: string
+          interviewer: string | null
+          location: string | null
+          notes: string | null
+          status: string | null
+          updated_at: string | null
+          vacancy_id: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string | null
+          id?: string
+          interview_date: string
+          interviewer?: string | null
+          location?: string | null
+          notes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vacancy_id?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string | null
+          id?: string
+          interview_date?: string
+          interviewer?: string | null
+          location?: string | null
+          notes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          vacancy_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interviews_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interviews_vacancy_id_fkey"
+            columns: ["vacancy_id"]
+            isOneToOne: false
+            referencedRelation: "vacancies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vacancies: {
+        Row: {
+          created_at: string | null
+          department: string | null
+          description: string | null
+          id: string
+          location: string | null
+          requirements: string | null
+          salary_max: number | null
+          salary_min: number | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          id?: string
+          location?: string | null
+          requirements?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          id?: string
+          location?: string | null
+          requirements?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
