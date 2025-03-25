@@ -1,69 +1,109 @@
-# Welcome to your Lovable project
+
+# HireLink - Recruiting Management System
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/772a5dac-dc3d-4eba-92cf-ae8b7a6e5f06
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Candidate Management**: Track and manage candidates throughout the hiring process
+- **Vacancy Management**: Create and manage job vacancies
+- **Hiring Pipeline**: Visual kanban-style pipeline to track candidates through stages
+- **Analytics**: Insights and metrics about your hiring process
+- **Mobile Support**: Native Android app capabilities with Capacitor
+- **Customizable Theme**: Personalize the app's appearance
 
-**Use Lovable**
+## Running on Android
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/772a5dac-dc3d-4eba-92cf-ae8b7a6e5f06) and start prompting.
+This project supports running as a native Android application using Capacitor. Follow these steps to set up and run the Android app:
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Clone this repository to your local machine
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Make the setup script executable:
+   ```bash
+   chmod +x capacitor.setup.sh
+   ```
+4. Run the setup script to configure Capacitor:
+   ```bash
+   ./capacitor.setup.sh
+   ```
+5. Build the web app:
+   ```bash
+   npm run build
+   ```
+6. Sync with Capacitor:
+   ```bash
+   npx cap sync
+   ```
+7. Open the project in Android Studio:
+   ```bash
+   npx cap open android
+   ```
+8. Run the app on an emulator or physical device from Android Studio
 
-**Use your preferred IDE**
+### Updating the Android app
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+After making changes to the web code:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Rebuild the web app:
+   ```bash
+   npm run build
+   ```
+2. Sync with Capacitor:
+   ```bash
+   npx cap sync
+   ```
+3. Reopen or refresh Android Studio to see the changes
 
-Follow these steps:
+## Native Features
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+This app utilizes native features through Capacitor:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **Camera Access**: Take profile pictures directly from the app
+- **Live Reload**: Development mode enables live reload for faster testing
+- **Splash Screen**: Custom splash screen when launching the app
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
+## Technologies Used
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Capacitor for native mobile functionality
 
-## How can I deploy this project?
+## Development
 
-Simply open [Lovable](https://lovable.dev/projects/772a5dac-dc3d-4eba-92cf-ae8b7a6e5f06) and click on Share -> Publish.
+To work on this project locally:
 
-## I want to use a custom domain - is that possible?
+```sh
+# Clone the repository
+git clone <YOUR_GIT_URL>
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+# Navigate to the project directory
+cd hirelink
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## Customization
+
+### Theme Customization
+
+Navigate to Settings > Appearance to customize the application's color theme.
+
+### Notification Settings
+
+Configure your notification preferences in Settings > Notifications.
+
+## Deployment
+
+Open [Lovable](https://lovable.dev/projects/772a5dac-dc3d-4eba-92cf-ae8b7a6e5f06) and click on Share -> Publish to deploy your project.
