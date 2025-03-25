@@ -3,47 +3,42 @@ import React from 'react';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Button } from '@/components/ui/button';
 import { 
-  NavigationMenu, 
-  NavigationMenuContent, 
-  NavigationMenuItem, 
-  NavigationMenuLink, 
-  NavigationMenuList, 
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle
-} from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
-import { Bell, Menu, Search } from 'lucide-react';
+  Bell, 
+  Menu, 
+  Search, 
+  X 
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useSidebar } from '@/components/ui/sidebar';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import MobileNavigation from './MobileNavigation';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { openMobile, setOpenMobile } = useSidebar();
 
   const handleNavigate = (path: string) => {
     navigate(path);
-  };
-
-  const toggleSidebar = (e: React.MouseEvent) => {
-    // Don't use preventDefault or stopPropagation here
-    // as they might be interfering with the normal event flow
-    setOpenMobile(!openMobile);
   };
 
   return (
     <header className="fixed top-0 left-0 right-0 h-[80px] flex items-center justify-between px-4 sm:px-6 bg-background/80 backdrop-blur-md z-40 border-b">
       <div className="flex items-center">
         {isMobile && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="mr-2" 
-            onClick={toggleSidebar}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="mr-2"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="h-[85vh]">
+              <MobileNavigation />
+            </DrawerContent>
+          </Drawer>
         )}
       </div>
 

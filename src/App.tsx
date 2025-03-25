@@ -19,6 +19,7 @@ import HiringPipeline from "./components/hiring-funnel/HiringPipeline";
 import AdvancedSearch from "./pages/AdvancedSearch";
 import CandidateMatch from "./pages/CandidateMatch";
 import { lazy, Suspense } from "react";
+import Help from "./pages/Help";
 
 // Lazy-loaded pages for better performance
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -60,6 +61,7 @@ const App = () => (
                 <Route path="/advanced-search" element={<AdvancedSearch />} />
                 <Route path="/candidate-match" element={<CandidateMatch />} />
                 <Route path="/profile" element={<Settings />} />
+                <Route path="/help" element={<Help />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
