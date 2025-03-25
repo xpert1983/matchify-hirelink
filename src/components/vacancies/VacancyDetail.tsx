@@ -6,13 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock, Mail, Phone, Globe, MessageSquare, FileText } from "lucide-react";
+import { Building, MapPin, Users, Calendar, DollarSign, Briefcase, GraduationCap, Clock, Mail, Phone, Globe, MessageSquare, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { VacancyProps } from './VacancyCard';
 import { VacancyStatus } from './VacancyStatusBadge';
 import PDFExporter from '../common/PDFExporter';
 import CommentSystem from '../comments/CommentSystem';
 import { useNotifications } from '@/hooks/use-notifications';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Define an extended interface that includes all the properties needed by VacancyDetail
 interface ExtendedVacancyProps extends VacancyProps {
@@ -31,6 +32,8 @@ interface VacancyDetailProps {
 const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const { addNotification } = useNotifications();
+  const isMobile = useIsMobile();
+  const [isContactExpanded, setIsContactExpanded] = useState(false);
   
   // Перевод типов вакансий
   const translateVacancyType = (type: string) => {
@@ -102,28 +105,34 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
     toast.success('Ссылка скопирована в буфер обмена');
   };
 
+  const toggleContactInfo = () => {
+    setIsContactExpanded(!isContactExpanded);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="overview">Обзор</TabsTrigger>
-          <TabsTrigger value="candidates">Кандидаты</TabsTrigger>
-          <TabsTrigger value="comments">Комментарии</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="mb-4">
+            <TabsTrigger value="overview">Обзор</TabsTrigger>
+            <TabsTrigger value="candidates">Кандидаты</TabsTrigger>
+            <TabsTrigger value="comments">Комментарии</TabsTrigger>
+          </TabsList>
+        </div>
         
         <TabsContent value="overview" className="space-y-6">
           <Card className="overflow-hidden">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-2/3 space-y-6">
+                <div className="md:w-2/3 space-y-4 sm:space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                    <Avatar className="h-20 w-20 rounded-md bg-white border border-border">
+                    <Avatar className="h-16 w-16 sm:h-20 sm:w-20 rounded-md bg-white border border-border">
                       <AvatarImage src={vacancy.logo} alt={vacancy.company} className="object-contain p-2" />
                       <AvatarFallback className="rounded-md">{vacancy.company.substring(0, 2)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <h2 className="text-2xl font-bold">{vacancy.title}</h2>
-                      <p className="text-lg text-muted-foreground">{vacancy.company}</p>
+                      <h2 className="text-xl sm:text-2xl font-bold">{vacancy.title}</h2>
+                      <p className="text-base sm:text-lg text-muted-foreground">{vacancy.company}</p>
                     </div>
                   </div>
                   
@@ -146,10 +155,60 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                         {vacancy.applicants} кандидатов
                       </Badge>
                     )}
-                    <Badge variant="outline" className="bg-green-100 text-green-800">
+                    <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
                       {vacancy.salary}
                     </Badge>
                   </div>
+                  
+                  {isMobile && (
+                    <Card className="mb-4">
+                      <CardHeader className="p-4 pb-0 flex flex-row items-center justify-between cursor-pointer" onClick={toggleContactInfo}>
+                        <h3 className="font-medium">Контактная информация</h3>
+                        {isContactExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </CardHeader>
+                      
+                      {isContactExpanded && (
+                        <CardContent className="p-4 space-y-4">
+                          <div className="flex items-center gap-3 border-b pb-3">
+                            <Avatar>
+                              <AvatarFallback>{contactPerson.name.substring(0, 2)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{contactPerson.name}</p>
+                              <p className="text-sm text-muted-foreground">{contactPerson.position}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-4 w-4 text-muted-foreground" />
+                              <span>{contactPerson.email}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Phone className="h-4 w-4 text-muted-foreground" />
+                              <span>{contactPerson.phone}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Building className="h-4 w-4 text-muted-foreground" />
+                              <span>{vacancy.location}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2">
+                            <Button className="flex-1 bg-primary hover:bg-primary/90 text-white">
+                              Подобрать кандидатов
+                            </Button>
+                            <PDFExporter 
+                              data={vacancy}
+                              entityName={vacancy.title}
+                              entityType="vacancy"
+                              className="w-auto"
+                            />
+                          </div>
+                        </CardContent>
+                      )}
+                    </Card>
+                  )}
                   
                   <div>
                     <h3 className="text-lg font-medium mb-2">Описание вакансии</h3>
@@ -195,105 +254,107 @@ const VacancyDetail: React.FC<VacancyDetailProps> = ({ vacancy }) => {
                   )}
                 </div>
                 
-                <div className="md:w-1/3">
-                  <Card>
-                    <CardContent className="p-4 space-y-4">
-                      <h3 className="font-medium">Контактная информация</h3>
-                      
-                      <div className="flex items-center gap-3 border-b pb-3">
-                        <Avatar>
-                          <AvatarFallback>{contactPerson.name.substring(0, 2)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{contactPerson.name}</p>
-                          <p className="text-sm text-muted-foreground">{contactPerson.position}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          <span>{contactPerson.email}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                          <span>{contactPerson.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Building className="h-4 w-4 text-muted-foreground" />
-                          <span>{vacancy.location}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Globe className="h-4 w-4 text-muted-foreground" />
-                          <span>www.{vacancy.company.toLowerCase().replace(/\s/g, '')}.ru</span>
-                        </div>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Дата публикации:</span>
-                          <span>{displayDate}</span>
-                        </div>
-                        {vacancy.applicants !== undefined && (
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Заявок получено:</span>
-                            <span>{vacancy.applicants}</span>
-                          </div>
-                        )}
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">ID вакансии:</span>
-                          <span>{vacancy.id}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0 flex gap-2">
-                      <Button className="w-full bg-primary hover:bg-primary/90 text-white">
-                        Подобрать кандидатов
-                      </Button>
-                      <PDFExporter 
-                        data={vacancy}
-                        entityName={vacancy.title}
-                        entityType="vacancy"
-                        className="w-auto"
-                      />
-                    </CardFooter>
-                  </Card>
-
-                  <div className="mt-4">
+                {!isMobile && (
+                  <div className="md:w-1/3">
                     <Card>
-                      <CardContent className="p-4">
-                        <h3 className="font-medium mb-2">Похожие вакансии</h3>
-                        <div className="space-y-3">
-                          {Array(3).fill(0).map((_, i) => (
-                            <div key={i} className="flex items-center gap-3 text-sm">
-                              <Avatar className="h-8 w-8 rounded-md">
-                                <AvatarFallback className="text-xs rounded-md">
-                                  {String.fromCharCode(65 + i)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium">{vacancy.title.split(' ').slice(0, 2).join(' ') + (i + 1)}</p>
-                                <p className="text-xs text-muted-foreground">Компания {String.fromCharCode(65 + i)}</p>
-                              </div>
+                      <CardContent className="p-4 space-y-4">
+                        <h3 className="font-medium">Контактная информация</h3>
+                        
+                        <div className="flex items-center gap-3 border-b pb-3">
+                          <Avatar>
+                            <AvatarFallback>{contactPerson.name.substring(0, 2)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{contactPerson.name}</p>
+                            <p className="text-sm text-muted-foreground">{contactPerson.position}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Mail className="h-4 w-4 text-muted-foreground" />
+                            <span className="truncate">{contactPerson.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <Phone className="h-4 w-4 text-muted-foreground" />
+                            <span>{contactPerson.phone}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <Building className="h-4 w-4 text-muted-foreground" />
+                            <span>{vacancy.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <Globe className="h-4 w-4 text-muted-foreground" />
+                            <span className="truncate">www.{vacancy.company.toLowerCase().replace(/\s/g, '')}.ru</span>
+                          </div>
+                        </div>
+                        
+                        <Separator />
+                        
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Дата публикации:</span>
+                            <span>{displayDate}</span>
+                          </div>
+                          {vacancy.applicants !== undefined && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground">Заявок получено:</span>
+                              <span>{vacancy.applicants}</span>
                             </div>
-                          ))}
+                          )}
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">ID вакансии:</span>
+                            <span className="truncate max-w-[120px]">{vacancy.id}</span>
+                          </div>
                         </div>
                       </CardContent>
+                      <CardFooter className="p-4 pt-0 flex gap-2">
+                        <Button className="w-full bg-primary hover:bg-primary/90 text-white">
+                          Подобрать кандидатов
+                        </Button>
+                        <PDFExporter 
+                          data={vacancy}
+                          entityName={vacancy.title}
+                          entityType="vacancy"
+                          className="w-auto"
+                        />
+                      </CardFooter>
                     </Card>
+
+                    <div className="mt-4">
+                      <Card>
+                        <CardContent className="p-4">
+                          <h3 className="font-medium mb-2">Похожие вакансии</h3>
+                          <div className="space-y-3">
+                            {Array(3).fill(0).map((_, i) => (
+                              <div key={i} className="flex items-center gap-3 text-sm">
+                                <Avatar className="h-8 w-8 rounded-md">
+                                  <AvatarFallback className="text-xs rounded-md">
+                                    {String.fromCharCode(65 + i)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium truncate">{vacancy.title.split(' ').slice(0, 2).join(' ') + (i + 1)}</p>
+                                  <p className="text-xs text-muted-foreground">Компания {String.fromCharCode(65 + i)}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
-            <CardFooter className="p-6 bg-secondary/30 flex justify-end gap-2">
+            <CardFooter className="p-4 sm:p-6 bg-secondary/30 flex flex-wrap gap-2 justify-end">
               <Button variant="outline">
                 Сохранить
               </Button>
-              <Button variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-200 hover:text-blue-900" onClick={handleShare}>
+              <Button variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-200 hover:text-blue-900 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800" onClick={handleShare}>
                 Поделиться
               </Button>
-              <Button variant="outline" className="bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-900" onClick={handleCloseVacancy}>
+              <Button variant="outline" className="bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-900 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800" onClick={handleCloseVacancy}>
                 Закрыть вакансию
               </Button>
               <Button className="bg-primary hover:bg-primary/90 text-white">

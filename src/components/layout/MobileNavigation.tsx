@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   BarChart, 
   Briefcase, 
-  FileText, 
   Home, 
   LayoutDashboard, 
   Handshake,
@@ -16,7 +15,6 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 
 const MobileNavigation: React.FC = () => {
   const location = useLocation();
@@ -53,10 +51,10 @@ const MobileNavigation: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 h-full flex flex-col">
+    <div className="p-4 h-full flex flex-col overflow-auto">
       <div className="flex items-center mb-6 mt-2">
         <div className="h-10 w-10 rounded-md bg-primary flex items-center justify-center">
-          <Handshake className="h-5 w-5 text-white" />
+          <Handshake className="h-5 w-5 text-primary-foreground" />
         </div>
         <span className="text-xl font-bold ml-2">HireLink</span>
       </div>

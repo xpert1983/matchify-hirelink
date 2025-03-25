@@ -39,6 +39,7 @@ const Header: React.FC = () => {
             </DrawerContent>
           </Drawer>
         )}
+        <div className="text-lg font-semibold ml-2">HireLink</div>
       </div>
 
       <div className="flex items-center space-x-2">

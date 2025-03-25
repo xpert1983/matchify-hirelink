@@ -98,6 +98,19 @@
   .shadow-elevated {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   }
+
+  /* Mobile responsive utilities */
+  .mobile-container {
+    @apply px-3 sm:px-4 md:px-6;
+  }
+  
+  .mobile-card-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+  
+  .mobile-form-layout {
+    @apply flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0;
+  }
 }
 
 @keyframes fade-in {
@@ -126,4 +139,24 @@
 
 .dark button.bg-primary:hover {
   @apply bg-primary/90 text-white;
+}
+
+/* Fix for dark mode buttons text contrast */
+.dark .btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+/* Responsive fixes */
+@media (max-width: 640px) {
+  .responsive-table {
+    @apply block w-full overflow-x-auto;
+  }
+  
+  .responsive-filters {
+    @apply flex flex-col space-y-2;
+  }
+  
+  .responsive-card {
+    @apply w-full;
+  }
 }

@@ -8,11 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowUpDown, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { matchesData, candidatesData, vacanciesData } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
 import MatchDetail from "@/components/matches/MatchDetail";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Type for the enhanced match data
 interface EnhancedMatch {
@@ -34,7 +35,9 @@ const Matches: React.FC = () => {
   const [sortOrder, setSortOrder] = useState("default");
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
   const [enhancedMatches, setEnhancedMatches] = useState<EnhancedMatch[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   // Combine match data with candidate and vacancy data
   useEffect(() => {
@@ -92,127 +95,196 @@ const Matches: React.FC = () => {
     );
   };
 
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
   return (
     <Layout>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Подборки</h1>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Поиск..."
-              className="pl-10 h-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+      <div className="flex flex-col space-y-4">
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-2xl font-bold">Подборки</h1>
+          <div className="flex items-center gap-2">
+            {!isMobile && (
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  type="text"
+                  placeholder="Поиск..."
+                  className="pl-10 h-9 w-[180px] lg:w-[220px]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            )}
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-9 w-9" 
+              onClick={toggleFilter}
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
           </div>
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="h-9 w-[180px]">
-              <SelectValue placeholder="Все статусы" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Все статусы</SelectItem>
-              <SelectItem value="Contacted">Контакт установлен</SelectItem>
-              <SelectItem value="Screening">Скрининг</SelectItem>
-              <SelectItem value="Interview">Собеседование</SelectItem>
-              <SelectItem value="Offered">Предложение</SelectItem>
-              <SelectItem value="Hired">Принят</SelectItem>
-              <SelectItem value="Rejected">Отклонен</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" size="icon" className="h-9 w-9">
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
         </div>
-      </div>
-
-      <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">Все</TabsTrigger>
-          <TabsTrigger value="Contacted">Контакт установлен</TabsTrigger>
-          <TabsTrigger value="Screening">Скрининг</TabsTrigger>
-          <TabsTrigger value="Interview">Собеседование</TabsTrigger>
-          <TabsTrigger value="Offered">Предложение</TabsTrigger>
-          <TabsTrigger value="Hired">Принят</TabsTrigger>
-          <TabsTrigger value="Rejected">Отклонен</TabsTrigger>
-        </TabsList>
-        <Separator />
         
-        <div className="pb-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Активные подборки</h2>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={sortOrder === "dateAsc" ? sortByDateDesc : sortByDateAsc}>
-                <ArrowUpDown className="w-4 h-4 mr-2" />
-                <span>Дата</span>
+        {isMobile && (
+          <div className="mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Поиск..."
+                className="pl-10 h-9 w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+        
+        {isFilterOpen && (
+          <div className="p-4 border rounded-md mb-4 bg-background">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="font-medium">Фильтры</h3>
+              <Button variant="ghost" size="icon" onClick={toggleFilter}>
+                <X className="h-4 w-4" />
               </Button>
             </div>
+            <div className="flex flex-col space-y-3">
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Все статусы" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Все статусы</SelectItem>
+                  <SelectItem value="Contacted">Контакт установлен</SelectItem>
+                  <SelectItem value="Screening">Скрининг</SelectItem>
+                  <SelectItem value="Interview">Собеседование</SelectItem>
+                  <SelectItem value="Offered">Предложение</SelectItem>
+                  <SelectItem value="Hired">Принят</SelectItem>
+                  <SelectItem value="Rejected">Отклонен</SelectItem>
+                </SelectContent>
+              </Select>
+              <div>
+                <Button variant="outline" size="sm" onClick={sortOrder === "dateAsc" ? sortByDateDesc : sortByDateAsc} className="w-full">
+                  <ArrowUpDown className="w-4 h-4 mr-2" />
+                  <span>Сортировать по дате</span>
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
-        <TabsContent value="all" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredMatches.map(match => (
-              <Card key={match.id} className="cursor-pointer" onClick={() => handleMatchClick(match.id)}>
-                <CardHeader>
-                  <CardTitle>{match.candidateName} - {match.vacancyTitle}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarImage src={match.candidateAvatar} alt={match.candidateName} />
-                    <AvatarFallback>АИ</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{match.company}</p>
-                    <Badge className="bg-blue-100 text-blue-800" variant="outline">
-                      {match.status}
-                    </Badge>
-                  </div>
-                </CardContent>
-                <CardFooter className="text-xs text-muted-foreground">
-                  Обновлено {match.date}
-                </CardFooter>
-              </Card>
-            ))}
+        <Tabs defaultValue="all" className="space-y-4">
+          <div className="overflow-x-auto">
+            <TabsList className="mb-4">
+              <TabsTrigger value="all">Все</TabsTrigger>
+              <TabsTrigger value="Contacted">Контакт</TabsTrigger>
+              <TabsTrigger value="Screening">Скрининг</TabsTrigger>
+              <TabsTrigger value="Interview">Интервью</TabsTrigger>
+              <TabsTrigger value="Offered">Оффер</TabsTrigger>
+              <TabsTrigger value="Hired">Принят</TabsTrigger>
+              <TabsTrigger value="Rejected">Отклонен</TabsTrigger>
+            </TabsList>
           </div>
-        </TabsContent>
+          <Separator />
+          
+          <div className="pb-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Активные подборки</h2>
+              {!isMobile && !isFilterOpen && (
+                <Button variant="ghost" size="sm" onClick={sortOrder === "dateAsc" ? sortByDateDesc : sortByDateAsc}>
+                  <ArrowUpDown className="w-4 h-4 mr-2" />
+                  <span>Дата</span>
+                </Button>
+              )}
+            </div>
+          </div>
 
-        {["Contacted", "Screening", "Interview", "Offered", "Hired", "Rejected"].map(status => (
-          <TabsContent key={status} value={status}>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredMatches
-                .filter(match => match.status === status)
-                .map(match => (
-                  <Card key={match.id} className="cursor-pointer" onClick={() => handleMatchClick(match.id)}>
-                    <CardHeader>
-                      <CardTitle>{match.candidateName} - {match.vacancyTitle}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex items-center gap-4">
-                      <Avatar>
-                        <AvatarImage src={match.candidateAvatar} alt={match.candidateName} />
-                        <AvatarFallback>АИ</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm text-muted-foreground">{match.company}</p>
-                        <Badge className="bg-blue-100 text-blue-800" variant="outline">
-                          {match.status}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="text-xs text-muted-foreground">
-                      Обновлено {match.date}
-                    </CardFooter>
-                  </Card>
+          <TabsContent value="all" className="space-y-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredMatches.map(match => (
+                <Card key={match.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMatchClick(match.id)}>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-base truncate">{match.candidateName} - {match.vacancyTitle}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0 flex items-center gap-4">
+                    <Avatar>
+                      <AvatarImage src={match.candidateAvatar} alt={match.candidateName} />
+                      <AvatarFallback>АИ</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm text-muted-foreground truncate max-w-[150px]">{match.company}</p>
+                      <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100" variant="outline">
+                        {match.status}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="text-xs text-muted-foreground p-4 pt-0">
+                    Обновлено {match.date}
+                  </CardFooter>
+                </Card>
               ))}
+              
+              {filteredMatches.length === 0 && (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-muted-foreground">Нет подборок, соответствующих заданным критериям</p>
+                </div>
+              )}
             </div>
           </TabsContent>
-        ))}
-      </Tabs>
+
+          {["Contacted", "Screening", "Interview", "Offered", "Hired", "Rejected"].map(status => (
+            <TabsContent key={status} value={status}>
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredMatches
+                  .filter(match => match.status === status)
+                  .map(match => (
+                    <Card key={match.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleMatchClick(match.id)}>
+                      <CardHeader className="p-4">
+                        <CardTitle className="text-base truncate">{match.candidateName} - {match.vacancyTitle}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0 flex items-center gap-4">
+                        <Avatar>
+                          <AvatarImage src={match.candidateAvatar} alt={match.candidateName} />
+                          <AvatarFallback>АИ</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm text-muted-foreground truncate max-w-[150px]">{match.company}</p>
+                          <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100" variant="outline">
+                            {match.status}
+                          </Badge>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="text-xs text-muted-foreground p-4 pt-0">
+                        Обновлено {match.date}
+                      </CardFooter>
+                    </Card>
+                ))}
+                
+                {filteredMatches.filter(match => match.status === status).length === 0 && (
+                  <div className="col-span-full text-center py-8">
+                    <p className="text-muted-foreground">Нет подборок со статусом "{status}"</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
       
       {selectedMatchId && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl">
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-auto bg-background rounded-lg shadow-lg relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-4 top-4 z-10"
+              onClick={handleCloseMatchDetail}
+            >
+              <X className="h-4 w-4" />
+            </Button>
             <MatchDetail matchId={selectedMatchId} />
           </div>
         </div>
