@@ -32,6 +32,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { createCandidate } from '@/services/candidateService';
 
 // Define form schema
 const formSchema = z.object({
@@ -55,6 +56,7 @@ const CandidateForm = () => {
   const navigate = useNavigate();
   const [skills, setSkills] = React.useState<string[]>([]);
   const [newSkill, setNewSkill] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Initialize form
   const form = useForm<FormValues>({
@@ -92,12 +94,37 @@ const CandidateForm = () => {
   };
 
   // Form submission handler
-  const onSubmit = (data: FormValues) => {
-    console.log('Form data submitted:', data);
-    toast.success('Кандидат успешно добавлен!', {
-      description: `${data.name} - ${data.position}`
-    });
-    navigate('/candidates');
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Create the candidate in the database
+      const [firstName, ...lastNameParts] = data.name.split(' ');
+      const lastName = lastNameParts.join(' ');
+      
+      await createCandidate({
+        first_name: firstName,
+        last_name: lastName || '',
+        email: data.email,
+        phone: data.phone,
+        skills: data.skills,
+        experience_years: data.experience,
+        resume_url: data.resume,
+        status: data.status
+      });
+      
+      toast.success('Кандидат успешно добавлен!', {
+        description: `${data.name} - ${data.position}`
+      });
+      navigate('/candidates');
+    } catch (error) {
+      console.error('Error creating candidate:', error);
+      toast.error('Ошибка при добавлении кандидата', {
+        description: 'Пожалуйста, попробуйте снова.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Return to candidates list

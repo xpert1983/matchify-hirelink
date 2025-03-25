@@ -45,9 +45,21 @@ export async function getCandidate(id: string) {
 }
 
 export async function createCandidate(candidate: Omit<Candidate, 'id' | 'created_at' | 'updated_at'>) {
+  // Format the data properly for the database
+  const candidateData = {
+    first_name: candidate.first_name,
+    last_name: candidate.last_name || '', // Handle empty last name
+    email: candidate.email,
+    phone: candidate.phone || null,
+    experience_years: candidate.experience_years || 0,
+    skills: candidate.skills || [],
+    resume_url: candidate.resume_url || null,
+    status: candidate.status || 'Available'
+  };
+
   const { data, error } = await supabase
     .from('candidates')
-    .insert(candidate)
+    .insert(candidateData)
     .select()
     .single();
   

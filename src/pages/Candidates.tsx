@@ -1,8 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import CandidateList from '@/components/candidates/CandidateList';
-import { candidatesData } from '@/lib/data';
 import { CandidateProps } from '@/components/candidates/CandidateCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CandidateDetail from '@/components/candidates/CandidateDetail';
+import { Candidate, getCandidates } from '@/services/candidateService';
+import { toast } from 'sonner';
 
 const Candidates = () => {
   const location = useLocation();
@@ -19,24 +20,54 @@ const Candidates = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [sortBy, setSortBy] = useState('name-asc');
+  const [candidates, setCandidates] = useState<CandidateProps[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Get the candidate ID from the URL if present
   const params = new URLSearchParams(location.search);
   const candidateId = params.get('id');
 
-  // Convert candidatesData to match CandidateProps type
-  const typedCandidates: CandidateProps[] = candidatesData.map(candidate => ({
-    ...candidate,
-    status: candidate.status as "Available" | "Interviewing" | "Hired" | "Not Available"
-  }));
+  // Fetch candidates from the database
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        setLoading(true);
+        const candidatesData = await getCandidates();
+        
+        // Convert from API format to component format
+        const formattedCandidates: CandidateProps[] = candidatesData.map((candidate: Candidate) => ({
+          id: candidate.id,
+          name: `${candidate.first_name} ${candidate.last_name}`,
+          position: candidate.skills?.join(', ') || 'Не указано',
+          location: 'Не указано', // This could be updated when the API provides this data
+          experience: `${candidate.experience_years || 0} лет`,
+          skills: candidate.skills || [],
+          avatar: `/placeholder.svg`, // Use placeholder for now
+          email: candidate.email,
+          phone: candidate.phone || 'Не указано',
+          status: candidate.status as "Available" | "Interviewing" | "Hired" | "Not Available" || "Available",
+          education: 'Не указано' // This could be updated when the API provides this data
+        }));
+        
+        setCandidates(formattedCandidates);
+      } catch (error) {
+        console.error('Error fetching candidates:', error);
+        toast.error('Ошибка при загрузке кандидатов');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCandidates();
+  }, [location.pathname]); // Refresh when navigating back to this page
 
   // Find the selected candidate if there's an ID in the URL
   const selectedCandidate = candidateId 
-    ? typedCandidates.find(c => c.id === candidateId) 
+    ? candidates.find(c => c.id === candidateId) 
     : null;
 
   // Filter candidates based on search term and status filter
-  const filteredCandidates = typedCandidates.filter(candidate => {
+  const filteredCandidates = candidates.filter(candidate => {
     const matchesSearch = candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           candidate.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           candidate.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -179,13 +210,19 @@ const Candidates = () => {
               </div>
             </div>
             
-            <CandidateList 
-              candidates={sortedCandidates.map(candidate => ({
-                ...candidate,
-                onFindVacancies: () => handleFindVacancies(candidate.id)
-              }))}
-              onViewCandidate={handleViewCandidate}
-            />
+            {loading ? (
+              <div className="flex justify-center p-8">
+                <p>Загрузка кандидатов...</p>
+              </div>
+            ) : (
+              <CandidateList 
+                candidates={sortedCandidates.map(candidate => ({
+                  ...candidate,
+                  onFindVacancies: () => handleFindVacancies(candidate.id)
+                }))}
+                onViewCandidate={handleViewCandidate}
+              />
+            )}
           </>
         )}
       </div>
