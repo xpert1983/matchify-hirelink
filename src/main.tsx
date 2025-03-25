@@ -3,6 +3,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { defineCustomElements } from '@ionic/pwa-elements/loader'; // For camera and other native elements
+
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);
 
 // Create root with the correct type assertion
 const rootElement = document.getElementById('root');
