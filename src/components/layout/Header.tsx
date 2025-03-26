@@ -1,76 +1,56 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { DarkModeToggle } from './DarkModeToggle';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Bell, Menu, Search, X } from 'lucide-react';
-import DarkModeToggle from './DarkModeToggle';
+import { 
+  Bell, 
+  Menu, 
+  Search 
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import NotificationCenter from '../notifications/NotificationCenter';
-import { useNotifications } from '@/hooks/use-notifications';
-import NotificationSettings from '../notifications/NotificationSettings';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import MobileNavigation from './MobileNavigation';
 
-const Header = () => {
+const Header: React.FC = () => {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [showSearch, setShowSearch] = useState(false);
-  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 flex items-center justify-between h-[80px] bg-background/80 backdrop-blur-md border-b z-20 px-4 lg:pl-6 lg:pr-10">
-      {showSearch ? (
-        <div className="flex items-center w-full gap-2">
-          <Input 
-            type="search" 
-            placeholder="Поиск..." 
-            className="w-full"
-            autoFocus 
-          />
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setShowSearch(false)}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center gap-4">
-            {isMobile && (
-              <Button variant="ghost" size="icon" className="lg:hidden">
+    <header className="fixed top-0 left-0 right-0 h-[80px] flex items-center justify-between px-4 sm:px-6 bg-background/80 backdrop-blur-md z-40 border-b">
+      <div className="flex items-center">
+        {isMobile && (
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="mr-2"
+              >
                 <Menu className="h-5 w-5" />
               </Button>
-            )}
-            <h1 className="text-xl font-bold">HireLink</h1>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setShowSearch(true)}
-              className="hidden md:flex"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-            
-            <NotificationCenter 
-              notifications={notifications}
-              unreadCount={unreadCount}
-              onReadNotification={markAsRead}
-              onReadAll={markAllAsRead}
-              onOpenSettings={() => setShowNotificationSettings(true)}
-            />
-            
-            <NotificationSettings 
-              open={showNotificationSettings}
-              onOpenChange={setShowNotificationSettings}
-            />
-            
-            <DarkModeToggle />
-          </div>
-        </>
-      )}
+            </DrawerTrigger>
+            <DrawerContent className="h-[85vh]">
+              <MobileNavigation />
+            </DrawerContent>
+          </Drawer>
+        )}
+        {/* Removed the duplicate HireLink text here since it's already in MobileNavigation */}
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Button variant="outline" size="icon" onClick={() => handleNavigate('/advanced-search')}>
+          <Search className="h-4 w-4" />
+        </Button>
+        <DarkModeToggle />
+        <Button variant="outline" size="icon">
+          <Bell className="h-4 w-4" />
+        </Button>
+      </div>
     </header>
   );
 };
