@@ -9,20 +9,17 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Add historyApiFallback to handle client-side routing
+    historyApiFallback: true,
   },
   plugins: [
-    react({
-      jsxImportSource: 'react',
-      // Make sure React is not a namespace
-      jsxRuntime: 'automatic'
-    }),
+    react(),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "react": path.resolve(__dirname, "./node_modules/react"),
     },
   },
   // Make Capacitor work better with Vite
