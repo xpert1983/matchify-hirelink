@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Bell, Menu, Search, X } from 'lucide-react';
-import DarkModeToggle from './DarkModeToggle';
+import { DarkModeToggle } from './DarkModeToggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import NotificationCenter from '../notifications/NotificationCenter';
 import { useNotifications } from '@/hooks/use-notifications';

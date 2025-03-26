@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Button } from '@/components/ui/button';
 import { CameraIcon, Upload } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -46,7 +46,7 @@ const NativeCamera: React.FC<NativeCameraProps> = ({
         quality: 90,
         allowEditing: true,
         resultType: CameraResultType.DataUrl,
-        source: 'PHOTOS'
+        source: CameraSource.Photos
       });
       
       const imageUrl = image.dataUrl;
