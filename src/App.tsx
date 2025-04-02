@@ -48,7 +48,7 @@ const App = () => (
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Загрузка...</div>}>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route element={<Layout />}>
+                <Route path="/" element={<Layout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/vacancies" element={<Vacancies />} />
                   <Route path="/vacancies/new" element={<VacancyForm />} />

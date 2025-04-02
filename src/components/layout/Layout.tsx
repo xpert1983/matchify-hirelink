@@ -7,7 +7,11 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileBottomNav from './MobileBottomNav';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children?: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isMobile = useIsMobile();
   
   return (
@@ -19,6 +23,7 @@ const Layout: React.FC = () => {
           <SidebarInset className="pt-[80px] pb-[60px] md:pb-0">
             <div className="container mx-auto p-4 h-full">
               <Outlet />
+              {children}
             </div>
           </SidebarInset>
           {isMobile && <MobileBottomNav />}

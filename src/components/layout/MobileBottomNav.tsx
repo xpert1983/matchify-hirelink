@@ -8,6 +8,7 @@ import {
   Handshake,
   BarChart
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const MobileBottomNav: React.FC = () => {
   const location = useLocation();
@@ -31,11 +32,12 @@ const MobileBottomNav: React.FC = () => {
           <Link
             key={index}
             to={item.path}
-            className={`flex flex-col items-center justify-center py-2 px-1 flex-1 ${
+            className={cn(
+              "flex flex-col items-center justify-center py-2 px-1 flex-1",
               isActive(item.path) 
-                ? 'text-primary' 
-                : 'text-muted-foreground'
-            }`}
+                ? "text-primary" 
+                : "text-muted-foreground"
+            )}
           >
             <item.icon className="h-5 w-5" />
             <span className="text-xs mt-1">{item.label}</span>
