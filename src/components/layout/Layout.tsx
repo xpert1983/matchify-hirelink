@@ -20,8 +20,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {!isMobile && <Sidebar />}
         <div className="flex flex-col w-full min-h-screen">
           <Header />
-          <SidebarInset className="pt-[80px] pb-[60px] md:pb-0">
-            <div className="container mx-auto p-4 h-full">
+          <SidebarInset className="pt-[60px] pb-[60px] md:pb-0">
+            <div className={`container mx-auto ${isMobile ? 'p-2' : 'p-4'} h-full overflow-x-hidden`}>
               <Outlet />
               {children}
             </div>

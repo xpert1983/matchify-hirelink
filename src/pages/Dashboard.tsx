@@ -9,6 +9,7 @@ import { Plus } from 'lucide-react';
 import { vacanciesData, candidatesData } from '@/lib/data';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Dialog,
   DialogTrigger,
@@ -22,6 +23,7 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   // Calculate top skills based on vacancies
   const getTopSkills = () => {
@@ -85,42 +87,42 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="space-y-4 md:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Добро пожаловать!</h1>
-            <p className="text-muted-foreground mt-1">Вот что происходит с вашим рекрутингом сегодня.</p>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Добро пожаловать!</h1>
+            <p className="text-muted-foreground mt-1 text-sm md:text-base">Вот что происходит с вашим рекрутингом сегодня.</p>
           </div>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm" onClick={handleNewVacancy}>
-              <Plus className="h-4 w-4 mr-2" />
-              Новая вакансия
+          <div className="flex space-x-2 mt-2 sm:mt-0">
+            <Button variant="outline" size={isMobile ? "sm" : "default"} onClick={handleNewVacancy} className="text-xs md:text-sm">
+              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              {isMobile ? "Вакансия" : "Новая вакансия"}
             </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white" onClick={handleNewCandidate}>
-              <Plus className="h-4 w-4 mr-2" />
-              Новый кандидат
+            <Button size={isMobile ? "sm" : "default"} className="bg-primary hover:bg-primary/90 text-white text-xs md:text-sm" onClick={handleNewCandidate}>
+              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              {isMobile ? "Кандидат" : "Новый кандидат"}
             </Button>
           </div>
         </div>
         
         <DashboardStats />
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
           <div className="lg:col-span-2">
             <RecentMatches />
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-3 md:space-y-6">
             <Card className="animate-slide-in" style={{ animationDelay: '200ms' }}>
-              <CardHeader className="pb-3">
-                <CardTitle>Востребованные навыки</CardTitle>
-                <CardDescription>Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
+              <CardHeader className="pb-2 md:pb-3">
+                <CardTitle className="text-base md:text-lg">Востребованные навыки</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {topSkills.map(({ skill, percentage }) => (
                     <div key={skill} className="space-y-1">
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-xs md:text-sm">
                         <span>{skill}</span>
                         <span className="text-muted-foreground">{percentage}%</span>
                       </div>
@@ -132,21 +134,21 @@ const Dashboard = () => {
             </Card>
             
             <Card className="animate-slide-in" style={{ animationDelay: '300ms' }}>
-              <CardHeader className="pb-3">
-                <CardTitle>Быстрые действия</CardTitle>
-                <CardDescription>Начните с этих задач</CardDescription>
+              <CardHeader className="pb-2 md:pb-3">
+                <CardTitle className="text-base md:text-lg">Быстрые действия</CardTitle>
+                <CardDescription className="text-xs md:text-sm">Начните с этих задач</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start text-left" onClick={handleViewCandidates}>
+                  <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm" onClick={handleViewCandidates}>
                     Просмотреть новые профили кандидатов
                   </Button>
-                  <Button variant="outline" className="w-full justify-start text-left" onClick={handleUpdateVacancies}>
+                  <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm" onClick={handleUpdateVacancies}>
                     Обновить данные вакансий
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left">
+                      <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm">
                         Запланировать собеседования
                       </Button>
                     </DialogTrigger>
@@ -169,7 +171,7 @@ const Dashboard = () => {
                   </Dialog>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left">
+                      <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm">
                         Создать отчет о подборе
                       </Button>
                     </DialogTrigger>

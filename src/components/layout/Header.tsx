@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Bell, Menu, Search, X } from 'lucide-react';
+import { Bell, Search, X } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import NotificationCenter from '../notifications/NotificationCenter';
@@ -16,7 +16,7 @@ const Header = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
   return (
-    <header className="fixed top-0 left-0 right-0 flex items-center justify-between h-[80px] bg-background/80 backdrop-blur-md border-b z-20 px-4 lg:pl-6 lg:pr-10">
+    <header className="fixed top-0 left-0 right-0 flex items-center justify-between h-[60px] bg-background/80 backdrop-blur-md border-b z-20 px-4 lg:pl-6 lg:pr-10">
       {showSearch ? (
         <div className="flex items-center w-full gap-2">
           <Input 
@@ -36,12 +36,9 @@ const Header = () => {
       ) : (
         <>
           <div className="flex items-center gap-4">
-            {isMobile && (
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
+            {isMobile ? null : (
+              <h1 className="text-xl font-bold">HireLink</h1>
             )}
-            <h1 className="text-xl font-bold">HireLink</h1>
           </div>
           
           <div className="flex items-center gap-2">

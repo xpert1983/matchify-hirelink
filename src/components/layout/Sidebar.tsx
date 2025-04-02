@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -74,10 +75,10 @@ export const Sidebar: React.FC = () => {
 
   return (
     <UISidebar
-      className="border-r z-50"
+      className="border-r z-50 shadow-sm"
       collapsible="offcanvas"
     >
-      <SidebarHeader className="flex h-[80px] items-center border-b px-6">
+      <SidebarHeader className="flex h-[60px] items-center border-b px-6">
         <div className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
             <Handshake className="h-4 w-4 text-white" />
