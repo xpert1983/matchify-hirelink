@@ -20,6 +20,7 @@ import AdvancedSearch from "./pages/AdvancedSearch";
 import CandidateMatch from "./pages/CandidateMatch";
 import { lazy, Suspense } from "react";
 import Help from "./pages/Help";
+import Layout from "./components/layout/Layout";
 
 // Lazy-loaded pages for better performance
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -47,21 +48,23 @@ const App = () => (
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Загрузка...</div>}>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/vacancies" element={<Vacancies />} />
-                <Route path="/vacancies/new" element={<VacancyForm />} />
-                <Route path="/vacancies/:id/pipeline" element={<HiringPipeline />} />
-                <Route path="/candidates" element={<Candidates />} />
-                <Route path="/candidates/new" element={<CandidateForm />} />
-                <Route path="/matches" element={<Matches />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/advanced-search" element={<AdvancedSearch />} />
-                <Route path="/candidate-match" element={<CandidateMatch />} />
-                <Route path="/profile" element={<Settings />} />
-                <Route path="/help" element={<Help />} />
+                <Route element={<Layout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/vacancies" element={<Vacancies />} />
+                  <Route path="/vacancies/new" element={<VacancyForm />} />
+                  <Route path="/vacancies/:id/pipeline" element={<HiringPipeline />} />
+                  <Route path="/candidates" element={<Candidates />} />
+                  <Route path="/candidates/new" element={<CandidateForm />} />
+                  <Route path="/matches" element={<Matches />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/advanced-search" element={<AdvancedSearch />} />
+                  <Route path="/candidate-match" element={<CandidateMatch />} />
+                  <Route path="/profile" element={<Settings />} />
+                  <Route path="/help" element={<Help />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

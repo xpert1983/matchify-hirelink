@@ -1,42 +1,30 @@
 
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import { Sidebar } from './Sidebar';
+import Sidebar from './Sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileBottomNav from './MobileBottomNav';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const location = useLocation();
-
-  // Add page transition effect
-  useEffect(() => {
-    const main = document.querySelector('main');
-    if (main) {
-      main.classList.add('animate-fade-in');
-    }
-    
-    return () => {
-      if (main) {
-        main.classList.remove('animate-fade-in');
-      }
-    };
-  }, [location.pathname]);
-
+const Layout: React.FC = () => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="min-h-screen flex w-full overflow-hidden">
-      <Sidebar />
-      <div className="flex-1 w-full overflow-hidden">
-        <Header />
-        <main className="pt-[80px] md:pl-0 transition-all duration-300 min-h-screen w-full overflow-x-hidden">
-          <div className="p-4 sm:p-6 max-w-full mx-auto overflow-x-hidden">
-            {children}
-          </div>
-        </main>
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-background text-foreground">
+        {!isMobile && <Sidebar />}
+        <div className="flex flex-col w-full min-h-screen">
+          <Header />
+          <SidebarInset className="pt-[80px] pb-[60px] md:pb-0">
+            <div className="container mx-auto p-4 h-full">
+              <Outlet />
+            </div>
+          </SidebarInset>
+          {isMobile && <MobileBottomNav />}
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
