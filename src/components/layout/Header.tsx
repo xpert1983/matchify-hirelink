@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Bell, Search, X } from 'lucide-react';
+import { Bell, Handshake, Search, X } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import NotificationCenter from '../notifications/NotificationCenter';
@@ -35,10 +35,14 @@ const Header = () => {
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-4">
-            {isMobile ? null : (
-              <h1 className="text-xl font-bold">HireLink</h1>
-            )}
+          <div className="flex items-center gap-2">
+            {/* Show logo and name on mobile */}
+            <div className="flex items-center gap-2">
+              <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
+                <Handshake className="h-4 w-4 text-white" />
+              </div>
+              <h1 className="text-lg font-bold">HireLink</h1>
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
