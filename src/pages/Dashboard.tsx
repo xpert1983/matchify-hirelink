@@ -10,41 +10,25 @@ import { vacanciesData, candidatesData } from '@/lib/data';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose
-} from '@/components/ui/dialog';
-
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  
+
   // Calculate top skills based on vacancies
   const getTopSkills = () => {
     const skillsCount: Record<string, number> = {};
-    
     vacanciesData.forEach(vacancy => {
       vacancy.skills.forEach(skill => {
         skillsCount[skill] = (skillsCount[skill] || 0) + 1;
       });
     });
-    
-    return Object.entries(skillsCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([skill, count]) => ({
-        skill,
-        count,
-        percentage: Math.round((count / vacanciesData.length) * 100)
-      }));
+    return Object.entries(skillsCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([skill, count]) => ({
+      skill,
+      count,
+      percentage: Math.round(count / vacanciesData.length * 100)
+    }));
   };
-  
   const topSkills = getTopSkills();
 
   // Handler for "New Vacancy" button
@@ -64,12 +48,10 @@ const Dashboard = () => {
     toast('Просмотр профилей кандидатов');
     navigate('/candidates');
   };
-
   const handleUpdateVacancies = () => {
     toast('Обновление данных вакансий');
     navigate('/vacancies');
   };
-
   const handleScheduleInterviews = () => {
     toast('Планирование собеседований', {
       description: 'Открытие календаря собеседований'
@@ -77,17 +59,14 @@ const Dashboard = () => {
     // In a real app, this would navigate to an interview calendar page
     // For now, we'll just show a dialog
   };
-
   const handleCreateReport = () => {
     toast('Создание отчета', {
       description: 'Начат процесс генерации отчета'
     });
     // In a real app, this would start a report generation process
   };
-
-  return (
-    <Layout>
-      <div className="space-y-4 md:space-y-6">
+  return <Layout>
+      <div className="space-y-4 md:space-y-6 py-[4px]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Добро пожаловать!</h1>
@@ -113,27 +92,32 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-3 md:space-y-6">
-            <Card className="animate-slide-in" style={{ animationDelay: '200ms' }}>
+            <Card className="animate-slide-in" style={{
+            animationDelay: '200ms'
+          }}>
               <CardHeader className="pb-2 md:pb-3">
                 <CardTitle className="text-base md:text-lg">Востребованные навыки</CardTitle>
                 <CardDescription className="text-xs md:text-sm">Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 md:space-y-4">
-                  {topSkills.map(({ skill, percentage }) => (
-                    <div key={skill} className="space-y-1">
+                  {topSkills.map(({
+                  skill,
+                  percentage
+                }) => <div key={skill} className="space-y-1">
                       <div className="flex justify-between text-xs md:text-sm">
                         <span>{skill}</span>
                         <span className="text-muted-foreground">{percentage}%</span>
                       </div>
                       <Progress value={percentage} className="h-2" />
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="animate-slide-in" style={{ animationDelay: '300ms' }}>
+            <Card className="animate-slide-in" style={{
+            animationDelay: '300ms'
+          }}>
               <CardHeader className="pb-2 md:pb-3">
                 <CardTitle className="text-base md:text-lg">Быстрые действия</CardTitle>
                 <CardDescription className="text-xs md:text-sm">Начните с этих задач</CardDescription>
@@ -207,8 +191,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </Layout>
-  );
+    </Layout>;
 };
-
 export default Dashboard;
