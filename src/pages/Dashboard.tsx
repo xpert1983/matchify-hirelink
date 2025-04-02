@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -11,6 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -65,20 +67,22 @@ const Dashboard = () => {
     });
     // In a real app, this would start a report generation process
   };
-  return <Layout>
-      <div className="space-y-4 md:space-y-6 py-[4px]">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-4">
+
+  return (
+    <Layout>
+      <div className="space-y-3 md:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Добро пожаловать!</h1>
-            <p className="text-muted-foreground mt-1 text-sm md:text-base">Вот что происходит с вашим рекрутингом сегодня.</p>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight">Добро пожаловать!</h1>
+            <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">Вот что происходит с вашим рекрутингом сегодня.</p>
           </div>
-          <div className="flex space-x-2 mt-2 sm:mt-0">
+          <div className="flex space-x-2 mt-1 sm:mt-0">
             <Button variant="outline" size={isMobile ? "sm" : "default"} onClick={handleNewVacancy} className="text-xs md:text-sm">
-              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1" />
               {isMobile ? "Вакансия" : "Новая вакансия"}
             </Button>
             <Button size={isMobile ? "sm" : "default"} className="bg-primary hover:bg-primary/90 text-white text-xs md:text-sm" onClick={handleNewCandidate}>
-              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1" />
               {isMobile ? "Кандидат" : "Новый кандидат"}
             </Button>
           </div>
@@ -86,53 +90,53 @@ const Dashboard = () => {
         
         <DashboardStats />
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="lg:col-span-2">
             <RecentMatches />
           </div>
           
-          <div className="space-y-3 md:space-y-6">
+          <div className="space-y-3">
             <Card className="animate-slide-in" style={{
-            animationDelay: '200ms'
-          }}>
-              <CardHeader className="pb-2 md:pb-3">
+              animationDelay: '200ms'
+            }}>
+              <CardHeader className="pb-2">
                 <CardTitle className="text-base md:text-lg">Востребованные навыки</CardTitle>
-                <CardDescription className="text-xs md:text-sm">Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
+                <CardDescription className="text-xs">Наиболее запрашиваемые навыки в открытых вакансиях</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3 md:space-y-4">
+                <div className="space-y-2 md:space-y-3">
                   {topSkills.map(({
-                  skill,
-                  percentage
-                }) => <div key={skill} className="space-y-1">
-                      <div className="flex justify-between text-xs md:text-sm">
-                        <span>{skill}</span>
-                        <span className="text-muted-foreground">{percentage}%</span>
-                      </div>
-                      <Progress value={percentage} className="h-2" />
-                    </div>)}
+                    skill,
+                    percentage
+                  }) => <div key={skill} className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span>{skill}</span>
+                          <span className="text-muted-foreground">{percentage}%</span>
+                        </div>
+                        <Progress value={percentage} className="h-1.5" />
+                      </div>)}
                 </div>
               </CardContent>
             </Card>
             
             <Card className="animate-slide-in" style={{
-            animationDelay: '300ms'
-          }}>
-              <CardHeader className="pb-2 md:pb-3">
+              animationDelay: '300ms'
+            }}>
+              <CardHeader className="pb-2">
                 <CardTitle className="text-base md:text-lg">Быстрые действия</CardTitle>
-                <CardDescription className="text-xs md:text-sm">Начните с этих задач</CardDescription>
+                <CardDescription className="text-xs">Начните с этих задач</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm" onClick={handleViewCandidates}>
+                  <Button variant="outline" className="w-full justify-start text-left text-xs" onClick={handleViewCandidates}>
                     Просмотреть новые профили кандидатов
                   </Button>
-                  <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm" onClick={handleUpdateVacancies}>
+                  <Button variant="outline" className="w-full justify-start text-left text-xs" onClick={handleUpdateVacancies}>
                     Обновить данные вакансий
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm">
+                      <Button variant="outline" className="w-full justify-start text-left text-xs">
                         Запланировать собеседования
                       </Button>
                     </DialogTrigger>
@@ -155,7 +159,7 @@ const Dashboard = () => {
                   </Dialog>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left text-xs md:text-sm">
+                      <Button variant="outline" className="w-full justify-start text-left text-xs">
                         Создать отчет о подборе
                       </Button>
                     </DialogTrigger>
@@ -191,6 +195,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </Layout>;
+    </Layout>
+  );
 };
+
 export default Dashboard;

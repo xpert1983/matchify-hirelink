@@ -39,38 +39,38 @@ const MatchItem: React.FC<MatchItemProps> = ({ candidate, vacancy, date }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border-b last:border-0 transition-all hover:bg-secondary/50">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10 border border-border">
+    <div className="flex items-center justify-between p-3 border-b last:border-0 transition-all hover:bg-secondary/50">
+      <div className="flex items-center gap-2">
+        <Avatar className="h-8 w-8 border border-border">
           <AvatarImage src={candidate.avatar} alt={candidate.name} />
           <AvatarFallback>{candidate.name.substring(0, 2)}</AvatarFallback>
         </Avatar>
         <div>
-          <h4 className="font-medium text-sm">{candidate.name}</h4>
+          <h4 className="font-medium text-xs">{candidate.name}</h4>
           <p className="text-xs text-muted-foreground">{candidate.position}</p>
         </div>
       </div>
       
-      <div className="flex items-center gap-2">
-        <CheckCircle className="h-4 w-4 text-primary" />
+      <div className="hidden sm:flex items-center gap-2">
+        <CheckCircle className="h-3 w-3 text-primary" />
       </div>
       
-      <div className="hidden md:flex items-center gap-3">
-        <Avatar className="h-9 w-9 rounded-md bg-white">
+      <div className="hidden md:flex items-center gap-2">
+        <Avatar className="h-7 w-7 rounded-md bg-white">
           <AvatarImage src={vacancy.logo} alt={vacancy.company} className="object-contain p-1" />
           <AvatarFallback className="rounded-md text-xs">{vacancy.company.substring(0, 2)}</AvatarFallback>
         </Avatar>
         <div>
-          <h4 className="font-medium text-sm">{vacancy.title}</h4>
+          <h4 className="font-medium text-xs">{vacancy.title}</h4>
           <p className="text-xs text-muted-foreground">{vacancy.company}</p>
         </div>
       </div>
       
       <div className="flex flex-col items-end">
-        <Badge variant="outline" className={`${getScoreColor(candidate.matchScore)}`}>
-          {candidate.matchScore}% совпадение
+        <Badge variant="outline" className={`text-[10px] px-1.5 py-0.5 ${getScoreColor(candidate.matchScore)}`}>
+          {candidate.matchScore}%
         </Badge>
-        <span className="text-xs text-muted-foreground mt-1">{translateDate(date)}</span>
+        <span className="text-[10px] text-muted-foreground mt-0.5">{translateDate(date)}</span>
       </div>
     </div>
   );
@@ -146,9 +146,9 @@ export const RecentMatches = () => {
 
   return (
     <Card className="w-full animate-slide-in" style={{ animationDelay: '100ms' }}>
-      <CardHeader className="pb-3">
-        <CardTitle>Последние подборки</CardTitle>
-        <CardDescription>Ваши недавние подборки кандидатов к вакансиям</CardDescription>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base md:text-lg">Последние подборки</CardTitle>
+        <CardDescription className="text-xs">Ваши недавние подборки кандидатов к вакансиям</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         {matchesData.map((match, idx) => (

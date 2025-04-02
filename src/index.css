@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -82,11 +83,11 @@
 
 @layer utilities {
   .animate-fade-in {
-    animation: fade-in 0.5s ease-in-out;
+    animation: fade-in 0.3s ease-in-out;
   }
   
   .animate-slide-in {
-    animation: slide-in 0.5s ease-out;
+    animation: slide-in 0.3s ease-out;
   }
   
   .hover-lift {
@@ -94,25 +95,25 @@
   }
   
   .hover-lift:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.1), 0 6px 8px -6px rgba(0, 0, 0, 0.05);
   }
   
   .shadow-elevated {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.1), 0 6px 8px -6px rgba(0, 0, 0, 0.05);
   }
 
   /* Mobile responsive utilities */
   .mobile-container {
-    @apply px-3 sm:px-4 md:px-6;
+    @apply px-2 sm:px-3 md:px-4;
   }
   
   .mobile-card-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3;
   }
   
   .mobile-form-layout {
-    @apply flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0;
+    @apply flex flex-col md:flex-row md:space-x-3 space-y-3 md:space-y-0;
   }
 }
 
@@ -128,7 +129,7 @@
 @keyframes slide-in {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -180,19 +181,57 @@
 
 @media (min-width: 640px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
 /* Fix for mobile overflow */
 .overflow-x-auto {
   -webkit-overflow-scrolling: touch;
+}
+
+/* Remove extra margins and make things more compact */
+p, h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Optimize dialog for mobile */
+@media (max-width: 640px) {
+  [data-radix-popper-content-wrapper] {
+    max-width: 90vw !important;
+  }
+}
+
+/* Fix horizontal scrolling issues */
+.max-w-full {
+  max-width: 100%;
+}
+
+.w-screen-safe {
+  width: 100vw;
+  width: calc(100vw - (100vw - 100%));
+  overflow-x: hidden;
+}
+
+/* Space optimization utilities */
+.space-xs {
+  margin: 0.125rem;
+  padding: 0.125rem;
+}
+
+.compact-ui {
+  --spacing-xs: 0.125rem;
+  --spacing-sm: 0.25rem;
+  --spacing-md: 0.5rem;
+  --spacing-lg: 0.75rem;
+  --spacing-xl: 1rem;
 }

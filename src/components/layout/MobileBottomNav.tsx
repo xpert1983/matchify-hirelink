@@ -26,21 +26,21 @@ const MobileBottomNav: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t z-20 md:hidden overflow-hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t z-20 md:hidden">
       <div className="flex justify-between items-center">
         {navItems.map((item, index) => (
           <Link
             key={index}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center py-2 px-1 flex-1",
+              "flex flex-col items-center justify-center py-1.5 px-1 flex-1",
               isActive(item.path) 
                 ? "text-primary" 
                 : "text-muted-foreground"
             )}
           >
-            <item.icon className="h-5 w-5" />
-            <span className="text-[10px] mt-1">{item.label}</span>
+            <item.icon className="h-4 w-4" />
+            <span className="text-[9px] mt-0.5">{item.label}</span>
           </Link>
         ))}
       </div>

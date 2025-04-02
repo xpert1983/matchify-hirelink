@@ -16,7 +16,7 @@ const Header = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
   return (
-    <header className="fixed top-0 left-0 right-0 flex items-center justify-between h-[60px] bg-background/80 backdrop-blur-md border-b z-20 px-4 lg:pl-6 lg:pr-10">
+    <header className="fixed top-0 left-0 right-0 flex items-center justify-between h-[60px] bg-background/90 backdrop-blur-md border-b z-20 px-3 md:px-4 lg:px-6">
       {showSearch ? (
         <div className="flex items-center w-full gap-2">
           <Input 
@@ -36,7 +36,6 @@ const Header = () => {
       ) : (
         <>
           <div className="flex items-center gap-2">
-            {/* Show logo and name on mobile */}
             <div className="flex items-center gap-2">
               <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
                 <Handshake className="h-4 w-4 text-white" />
@@ -45,7 +44,7 @@ const Header = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <Button 
               variant="ghost" 
               size="icon" 
