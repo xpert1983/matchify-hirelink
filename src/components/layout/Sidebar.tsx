@@ -6,7 +6,6 @@ import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sidebar as UISidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar';
-
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const {
@@ -31,7 +30,6 @@ export const Sidebar: React.FC = () => {
       setOpenMobile(false);
     }
   }, [location.pathname, isMobile, openMobile, setOpenMobile]);
-  
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -45,14 +43,11 @@ export const Sidebar: React.FC = () => {
       // The sidebar will be closed by the useEffect when the route changes
     }
   };
-  
   return <UISidebar className="border-r z-50 shadow-sm" collapsible="offcanvas">
       <SidebarHeader className="flex h-[60px] items-center border-b px-6">
         <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-            <Handshake className="h-4 w-4 text-white" />
-          </div>
-          <span className="text-lg font-bold">HireLink</span>
+          
+          
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -164,5 +159,4 @@ export const Sidebar: React.FC = () => {
       <SidebarRail />
     </UISidebar>;
 };
-
 export default Sidebar;
