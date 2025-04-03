@@ -6,7 +6,6 @@ import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sidebar as UISidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar';
-
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const {
@@ -14,31 +13,23 @@ export const Sidebar: React.FC = () => {
     setOpenMobile
   } = useSidebar();
   const isMobile = useIsMobile();
-
   const isInitialMount = React.useRef(true);
-
   React.useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
-
     if (isMobile && openMobile) {
       setOpenMobile(false);
     }
   }, [location.pathname, isMobile, openMobile, setOpenMobile]);
-  
   const isActive = (path: string) => {
     return location.pathname === path;
   };
-
   const handleMenuLinkClick = (e: React.MouseEvent) => {
-    if (isMobile) {
-    }
+    if (isMobile) {}
   };
-  
-  return (
-    <UISidebar className="border-r z-50 shadow-sm" collapsible="offcanvas">
+  return <UISidebar className="border-r z-50 shadow-sm" collapsible="offcanvas">
       <SidebarHeader className="flex h-[60px] items-center border-b px-3">
         <div className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
@@ -48,7 +39,7 @@ export const Sidebar: React.FC = () => {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="mx-0 px-0">
           <SidebarGroupLabel className="px-3 py-1 text-xs">Навигация</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -136,7 +127,7 @@ export const Sidebar: React.FC = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="mt-auto border-t p-3">
+      <SidebarFooter className="mt-auto border-t p-3 px-[13px] my-0 mx-[20px]">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center">
@@ -153,9 +144,7 @@ export const Sidebar: React.FC = () => {
           </Button>
         </div>
       </SidebarFooter>
-      <SidebarRail />
-    </UISidebar>
-  );
+      <SidebarRail className="mx-[21px]" />
+    </UISidebar>;
 };
-
 export default Sidebar;
