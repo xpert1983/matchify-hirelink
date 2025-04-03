@@ -4,7 +4,7 @@ import CandidateCard, { CandidateProps } from './CandidateCard';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Briefcase, Filter, GraduationCap, Mail, MapPin, Phone, Plus, Search } from 'lucide-react';
+import { Briefcase, GraduationCap, Mail, MapPin, Phone } from 'lucide-react';
 
 interface CandidateListProps {
   candidates: CandidateProps[];

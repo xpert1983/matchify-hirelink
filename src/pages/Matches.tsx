@@ -8,14 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Search, SlidersHorizontal, ArrowUpDown, X } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowUpDown, X, Activity, Clock, CheckCircle, XCircle, FileSearch, FileCheck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { matchesData, candidatesData, vacanciesData } from "@/lib/data";
 import { useNavigate } from "react-router-dom";
 import MatchDetail from "@/components/matches/MatchDetail";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
 
-// Type for the enhanced match data
+// Тип для расширенных данных подборки
 interface EnhancedMatch {
   id: string;
   candidateId: string;
@@ -39,25 +40,35 @@ const Matches: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
-  // Combine match data with candidate and vacancy data
+  // Получение данных из Supabase
   useEffect(() => {
-    const enhanced = matchesData.map(match => {
-      const candidate = candidatesData.find(c => c.id === match.candidateId);
-      const vacancy = vacanciesData.find(v => v.id === match.vacancyId);
-      
-      return {
-        ...match,
-        candidateName: candidate?.name || 'Unknown Candidate',
-        candidateAvatar: candidate?.avatar || '',
-        vacancyTitle: vacancy?.title || 'Unknown Position',
-        company: vacancy?.company || 'Unknown Company'
-      };
-    });
+    const fetchData = async () => {
+      try {
+        // Здесь можно использовать данные из Supabase
+        // Пока используем моковые данные
+        const enhanced = matchesData.map(match => {
+          const candidate = candidatesData.find(c => c.id === match.candidateId);
+          const vacancy = vacanciesData.find(v => v.id === match.vacancyId);
+          
+          return {
+            ...match,
+            candidateName: candidate?.name || 'Неизвестный кандидат',
+            candidateAvatar: candidate?.avatar || '',
+            vacancyTitle: vacancy?.title || 'Неизвестная позиция',
+            company: vacancy?.company || 'Неизвестная компания'
+          };
+        });
+        
+        setEnhancedMatches(enhanced);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      }
+    };
     
-    setEnhancedMatches(enhanced);
+    fetchData();
   }, []);
 
-  // Filter the matches based on search query and selected status
+  // Фильтрация подборок по поисковому запросу и выбранному статусу
   const filteredMatches = enhancedMatches.filter(match => {
     const searchMatch = match.candidateName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                        match.vacancyTitle.toLowerCase().includes(searchQuery.toLowerCase());
@@ -97,6 +108,17 @@ const Matches: React.FC = () => {
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
+  };
+
+  // Объект для иконок и переводов статусов для мобильной версии
+  const statusIcons = {
+    "all": { icon: Activity, label: "Все" },
+    "Contacted": { icon: Clock, label: "Контакт" },
+    "Screening": { icon: FileSearch, label: "Скрининг" },
+    "Interview": { icon: Activity, label: "Интервью" },
+    "Offered": { icon: FileCheck, label: "Оффер" },
+    "Hired": { icon: CheckCircle, label: "Принят" },
+    "Rejected": { icon: XCircle, label: "Отклонен" }
   };
 
   return (
@@ -177,16 +199,27 @@ const Matches: React.FC = () => {
         )}
 
         <Tabs defaultValue="all" className="space-y-4">
-          <div className="overflow-x-auto">
-            <TabsList className="mb-4">
-              <TabsTrigger value="all">Все</TabsTrigger>
-              <TabsTrigger value="Contacted">Контакт</TabsTrigger>
-              <TabsTrigger value="Screening">Скрининг</TabsTrigger>
-              <TabsTrigger value="Interview">Интервью</TabsTrigger>
-              <TabsTrigger value="Offered">Оффер</TabsTrigger>
-              <TabsTrigger value="Hired">Принят</TabsTrigger>
-              <TabsTrigger value="Rejected">Отклонен</TabsTrigger>
-            </TabsList>
+          <div className="overflow-x-auto scrollbar-none">
+            {isMobile ? (
+              <TabsList className="mb-4 w-full justify-between">
+                {Object.entries(statusIcons).map(([status, { icon: Icon, label }]) => (
+                  <TabsTrigger key={status} value={status} className="px-1.5 py-1.5 flex-1 min-w-0">
+                    <Icon className="h-3 w-3 md:mr-1" />
+                    <span className="hidden md:inline text-[9px]">{label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            ) : (
+              <TabsList className="mb-4">
+                <TabsTrigger value="all">Все</TabsTrigger>
+                <TabsTrigger value="Contacted">Контакт</TabsTrigger>
+                <TabsTrigger value="Screening">Скрининг</TabsTrigger>
+                <TabsTrigger value="Interview">Интервью</TabsTrigger>
+                <TabsTrigger value="Offered">Оффер</TabsTrigger>
+                <TabsTrigger value="Hired">Принят</TabsTrigger>
+                <TabsTrigger value="Rejected">Отклонен</TabsTrigger>
+              </TabsList>
+            )}
           </div>
           <Separator />
           

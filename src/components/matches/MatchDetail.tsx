@@ -48,17 +48,17 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ matchId, onClose }) => {
   }, [matchId]);
 
   if (!matchData || !candidate || !vacancy) {
-    return <div>Loading...</div>;
+    return <div>Загрузка...</div>;
   }
   
-  // Determine match score color
+  // Определяем цвет для шкалы соответствия
   const getScoreColor = (score: number) => {
     if (score >= 90) return "bg-green-500";
     if (score >= 75) return "bg-yellow-500";
     return "bg-red-500";
   };
 
-  // Get status badge color
+  // Получение цвета бейджа статуса
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Contacted":
@@ -75,6 +75,19 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ matchId, onClose }) => {
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Перевод статусов
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case "Contacted": return "Контакт установлен";
+      case "Screening": return "Скрининг";
+      case "Interview": return "Собеседование";
+      case "Offered": return "Предложение";
+      case "Hired": return "Принят";
+      case "Rejected": return "Отклонен";
+      default: return status;
     }
   };
 
@@ -101,7 +114,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ matchId, onClose }) => {
                 <h4 className="text-xl font-bold">{candidate.name}</h4>
                 <p className="text-muted-foreground">{candidate.position}</p>
                 <Badge variant="outline" className="mt-1">
-                  {candidate.status}
+                  {translateStatus(candidate.status)}
                 </Badge>
               </div>
             </div>
@@ -192,7 +205,7 @@ const MatchDetail: React.FC<MatchDetailProps> = ({ matchId, onClose }) => {
                   <span>Дата подборки: {matchData.date}</span>
                 </div>
                 <Badge className={getStatusColor(matchData.status)} variant="outline">
-                  {matchData.status}
+                  {translateStatus(matchData.status)}
                 </Badge>
               </div>
             </div>

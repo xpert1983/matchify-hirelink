@@ -196,6 +196,34 @@
   .compact-card {
     @apply p-2 rounded-md shadow-sm;
   }
+
+  /* Убираем полосу прокрутки */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Стили для TabsList на мобильных устройствах */
+  @media (max-width: 640px) {
+    [role="tabslist"] {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: flex;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    [role="tabslist"] [role="tab"] {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
 }
 
 @keyframes fade-in {
@@ -326,6 +354,11 @@
   /* Table cell optimization */
   td, th {
     @apply px-1.5 py-1 text-xs;
+  }
+  
+  /* Оптимизация для TabsList на мобильных устройствах */
+  [data-orientation="horizontal"] {
+    @apply scrollbar-none;
   }
 }
 

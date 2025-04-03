@@ -22,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({
         {!isMobile && <Sidebar />}
         <div className="flex flex-col w-full min-h-screen">
           <Header />
-          <SidebarInset className="pt-[56px] pb-[56px] md:pb-0 my-0 px-0 rounded-none mx-0 md:mx-[8px]">
+          <SidebarInset className="pt-[56px] pb-[56px] md:pb-0 my-0 px-0 rounded-none mx-0 md:mx-[8px] max-w-full overflow-x-hidden">
             <div className="px-2 md:px-3 max-w-full overflow-x-hidden">
               <Outlet />
               {children}
