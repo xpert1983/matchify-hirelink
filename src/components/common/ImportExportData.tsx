@@ -112,7 +112,7 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
   return <div className={`flex items-center gap-2 ${className || ''}`}>
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight rounded-sm text-left flex-1 text-base">
+          <Button variant="outline" size="sm" className="mx-0 px-0 rounded-sm text-left flex-1 font-medium text-sm">
             <Upload className="h-4 w-4 mr-2" />
             Импорт
           </Button>
