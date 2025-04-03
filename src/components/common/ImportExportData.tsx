@@ -1,31 +1,15 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from '@/components/ui/dialog';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { Upload, Download, FileText, Database, ChevronDown } from 'lucide-react';
-
 interface ImportExportDataProps {
   entityType: 'vacancies' | 'candidates' | 'matches';
   onImport?: (data: any) => void;
   onExport?: () => any;
 }
-
 const ImportExportData: React.FC<ImportExportDataProps> = ({
   entityType,
   onImport,
@@ -35,39 +19,32 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
   const [importFile, setImportFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-
   const entityName = {
     vacancies: 'вакансий',
     candidates: 'кандидатов',
     matches: 'совпадений'
   }[entityType] || '';
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setImportFile(e.target.files[0]);
     }
   };
-
   const handleImport = async () => {
     if (!importFile) {
       toast.error('Выберите файл для импорта');
       return;
     }
-
     setIsImporting(true);
-    
     try {
       // Здесь будет логика импорта файла
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = event => {
         try {
           if (event.target?.result) {
             const data = JSON.parse(event.target.result as string);
-            
             if (onImport) {
               onImport(data);
             }
-            
             toast.success(`Импорт данных ${entityName} успешно завершен`);
             setIsImportDialogOpen(false);
             setImportFile(null);
@@ -77,11 +54,9 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
           toast.error('Ошибка при обработке файла. Проверьте формат данных.');
         }
       };
-      
       reader.onerror = () => {
         toast.error('Ошибка при чтении файла');
       };
-      
       reader.readAsText(importFile);
     } catch (error) {
       console.error('Import error:', error);
@@ -90,18 +65,14 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsImporting(false);
     }
   };
-
   const handleExport = async (format: 'json' | 'csv' | 'excel') => {
     if (!onExport) return;
-    
     setIsExporting(true);
-    
     try {
       const data = onExport();
       let content: string = '';
       let mimeType: string = '';
       let fileExtension: string = '';
-      
       if (format === 'json') {
         content = JSON.stringify(data, null, 2);
         mimeType = 'application/json';
@@ -120,8 +91,9 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
         fileExtension = 'json';
         toast.info('Экспорт в Excel требует дополнительных библиотек');
       }
-      
-      const blob = new Blob([content], { type: mimeType });
+      const blob = new Blob([content], {
+        type: mimeType
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -130,7 +102,6 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       a.click();
       URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      
       toast.success(`Данные ${entityName} успешно экспортированы`);
     } catch (error) {
       console.error('Export error:', error);
@@ -139,12 +110,10 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsExporting(false);
     }
   };
-
-  return (
-    <div className="flex items-center gap-2">
+  return <div className="flex items-center gap-2">
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight text-xs rounded-none">
             <Upload className="h-4 w-4 mr-2" />
             Импорт
           </Button>
@@ -162,17 +131,10 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
               <label htmlFor="importFile" className="text-sm font-medium">
                 Выберите файл
               </label>
-              <Input
-                id="importFile"
-                type="file"
-                accept=".json,.csv,.xlsx"
-                onChange={handleFileChange}
-              />
-              {importFile && (
-                <p className="text-xs text-muted-foreground">
+              <Input id="importFile" type="file" accept=".json,.csv,.xlsx" onChange={handleFileChange} />
+              {importFile && <p className="text-xs text-muted-foreground">
                   Выбран файл: {importFile.name}
-                </p>
-              )}
+                </p>}
             </div>
           </div>
           
@@ -210,8 +172,6 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
-  );
+    </div>;
 };
-
 export default ImportExportData;
