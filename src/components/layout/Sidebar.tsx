@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart, Briefcase, FileText, Home, LayoutDashboard, Handshake, Settings, Users, User, Search, LogOut } from 'lucide-react';
@@ -16,18 +15,14 @@ export const Sidebar: React.FC = () => {
   } = useSidebar();
   const isMobile = useIsMobile();
 
-  // Create ref inside the component body
   const isInitialMount = React.useRef(true);
 
-  // Fix the useEffect to properly handle route changes
   React.useEffect(() => {
-    // Skip the effect on initial mount
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
-    // Close the menu only when route changes and in mobile mode
     if (isMobile && openMobile) {
       setOpenMobile(false);
     }
@@ -37,13 +32,8 @@ export const Sidebar: React.FC = () => {
     return location.pathname === path;
   };
 
-  // Handler for menu link clicks - don't close the sidebar immediately
   const handleMenuLinkClick = (e: React.MouseEvent) => {
-    // For mobile, add a longer delay before closing the sidebar
-    // to allow the navigation to register first
     if (isMobile) {
-      // Don't close the menu immediately - wait for navigation
-      // The sidebar will be closed by the useEffect when the route changes
     }
   };
   

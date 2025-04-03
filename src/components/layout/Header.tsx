@@ -36,12 +36,14 @@ const Header = () => {
       ) : (
         <>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-                <Handshake className="h-4 w-4 text-white" />
+            {isMobile && (
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
+                  <Handshake className="h-4 w-4 text-white" />
+                </div>
+                <h1 className="text-lg font-bold">HireLink</h1>
               </div>
-              <h1 className="text-lg font-bold">HireLink</h1>
-            </div>
+            )}
           </div>
           
           <div className="flex items-center gap-1 md:gap-2">
