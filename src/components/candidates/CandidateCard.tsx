@@ -63,51 +63,51 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-elevated hover-scale w-full">
       <CardContent className="p-0">
-        <div className="p-4 sm:p-6">
+        <div className="p-2.5 sm:p-3">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-background">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-9 w-9 sm:h-10 sm:w-10 border-2 border-background">
                 <AvatarImage src={candidate.avatar} alt={candidate.name} />
                 <AvatarFallback>{candidate.name.substring(0, 2)}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <h3 className="font-medium text-base sm:text-lg">{candidate.name}</h3>
-                  <Badge variant="outline" className={`${getStatusColor(candidate.status)} mt-1 sm:mt-0`}>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                  <h3 className="font-medium text-sm">{candidate.name}</h3>
+                  <Badge variant="outline" className={`${getStatusColor(candidate.status)} mt-0.5 sm:mt-0 text-[8px] px-1 py-0`}>
                     {translateStatus(candidate.status)}
                   </Badge>
                 </div>
-                <p className="text-muted-foreground text-sm">{candidate.position}</p>
+                <p className="text-muted-foreground text-xs">{candidate.position}</p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8 absolute top-4 right-4 sm:static">
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="h-6 w-6 absolute top-2 right-2 sm:static">
+              <MoreHorizontal className="h-3 w-3" />
             </Button>
           </div>
           
-          <div className="mt-4 space-y-1 sm:space-y-2">
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+          <div className="mt-2 space-y-0.5">
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <MapPin className="h-2.5 w-2.5" />
               <span>{candidate.location}</span>
             </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <Briefcase className="h-3 w-3 sm:h-4 sm:w-4" />
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Briefcase className="h-2.5 w-2.5" />
               <span>{candidate.experience}</span>
             </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4" />
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <GraduationCap className="h-2.5 w-2.5" />
               <span>{candidate.education}</span>
             </div>
           </div>
           
-          <div className="mt-3 sm:mt-4 flex flex-wrap gap-1 sm:gap-2">
+          <div className="mt-2 flex flex-wrap gap-1">
             {candidate.skills.slice(0, 3).map((skill) => (
-              <Badge key={skill} variant="outline" className="bg-secondary/70 text-xs">
+              <Badge key={skill} variant="outline" className="bg-secondary/70 text-[8px] px-1 py-0 h-4">
                 {skill}
               </Badge>
             ))}
             {candidate.skills.length > 3 && (
-              <Badge variant="outline" className="bg-secondary/70 text-xs">
+              <Badge variant="outline" className="bg-secondary/70 text-[8px] px-1 py-0 h-4">
                 +{candidate.skills.length - 3}
               </Badge>
             )}
@@ -115,28 +115,28 @@ export const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, onView 
         </div>
       </CardContent>
       
-      <CardFooter className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-t bg-secondary/30 gap-2">
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-start">
-          <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 text-muted-foreground" title={candidate.email}>
-            <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+      <CardFooter className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2 border-t bg-secondary/30 gap-1">
+        <div className="flex items-center gap-1 w-full sm:w-auto justify-start">
+          <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" title={candidate.email}>
+            <Mail className="h-3 w-3" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 text-muted-foreground" title={candidate.phone}>
-            <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+          <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" title={candidate.phone}>
+            <Phone className="h-3 w-3" />
           </Button>
         </div>
         
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+        <div className="flex items-center gap-1 w-full sm:w-auto justify-between sm:justify-end">
           <Button 
             variant="outline" 
             size="sm"
-            className="text-xs h-8 px-2 sm:px-3"
+            className="text-[9px] h-6 px-1.5"
             onClick={() => onView(candidate.id)}
           >
-            Просмотр профиля
+            Просмотр
           </Button>
           <Button 
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-white text-xs h-8 px-2 sm:px-3"
+            className="bg-primary hover:bg-primary/90 text-white text-[9px] h-6 px-1.5"
             onClick={handleFindVacancies}
           >
             Найти вакансии

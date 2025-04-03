@@ -49,13 +49,13 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
   };
 
   return (
-    <div className="space-y-6 animate-slide-in">
+    <div className="space-y-4 animate-slide-in">
       {candidates.length === 0 ? (
-        <div className="text-center p-10 border rounded-lg bg-secondary/30">
-          <p className="text-muted-foreground">Нет кандидатов, соответствующих критериям поиска</p>
+        <div className="text-center p-4 border rounded-lg bg-secondary/30">
+          <p className="text-muted-foreground text-sm">Нет кандидатов, соответствующих критериям поиска</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {candidates.map((candidate) => (
             <CandidateCard 
               key={candidate.id} 
@@ -68,59 +68,59 @@ export const CandidateList: React.FC<CandidateListProps> = ({ candidates, onView
       
       {selectedCandidate && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto p-3 sm:p-4">
             <DialogHeader>
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 border-2 border-background">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-12 w-12 border-2 border-background">
                   <AvatarImage src={selectedCandidate.avatar} alt={selectedCandidate.name} />
                   <AvatarFallback>{selectedCandidate.name.substring(0, 2)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <DialogTitle className="text-xl">{selectedCandidate.name}</DialogTitle>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <DialogTitle className="text-base">{selectedCandidate.name}</DialogTitle>
                     <Badge className={getStatusColor(selectedCandidate.status)}>
                       {translateStatus(selectedCandidate.status)}
                     </Badge>
                   </div>
-                  <DialogDescription>{selectedCandidate.position}</DialogDescription>
+                  <DialogDescription className="text-sm">{selectedCandidate.position}</DialogDescription>
                 </div>
               </div>
             </DialogHeader>
             
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
+            <div className="space-y-3 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <MapPin className="h-3 w-3 text-muted-foreground" />
                     <span>{selectedCandidate.location}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Briefcase className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Briefcase className="h-3 w-3 text-muted-foreground" />
                     <span>{selectedCandidate.experience}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <GraduationCap className="h-3 w-3 text-muted-foreground" />
                     <span>{selectedCandidate.education}</span>
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Mail className="h-3 w-3 text-muted-foreground" />
                     <span>{selectedCandidate.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Phone className="h-3 w-3 text-muted-foreground" />
                     <span>{selectedCandidate.phone}</span>
                   </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Навыки</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="font-medium text-xs mb-1.5">Навыки</h3>
+                <div className="flex flex-wrap gap-1.5">
                   {selectedCandidate.skills.map((skill) => (
-                    <Badge key={skill} variant="outline" className="bg-secondary/70">
+                    <Badge key={skill} variant="outline" className="bg-secondary/70 text-xs">
                       {skill}
                     </Badge>
                   ))}

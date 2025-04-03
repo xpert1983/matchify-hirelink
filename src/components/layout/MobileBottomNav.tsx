@@ -33,14 +33,14 @@ const MobileBottomNav: React.FC = () => {
             key={index}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center py-1 px-0.5 flex-1",
+              "flex flex-col items-center justify-center py-1 px-0 flex-1",
               isActive(item.path) 
                 ? "text-primary" 
                 : "text-muted-foreground"
             )}
           >
-            <item.icon className="h-3.5 w-3.5" />
-            <span className="text-[8px] mt-0.5">{item.label}</span>
+            <item.icon className="h-3 w-3" />
+            <span className="text-[7px] mt-0.5">{item.label}</span>
           </Link>
         ))}
       </div>
