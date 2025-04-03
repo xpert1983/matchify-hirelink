@@ -105,15 +105,15 @@
 
   /* Mobile responsive utilities */
   .mobile-container {
-    @apply px-2 sm:px-3 md:px-4;
+    @apply px-1 sm:px-2 md:px-3;
   }
   
   .mobile-card-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2;
   }
   
   .mobile-form-layout {
-    @apply flex flex-col md:flex-row md:space-x-3 space-y-3 md:space-y-0;
+    @apply flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0;
   }
 }
 
@@ -169,6 +169,40 @@
   
   .responsive-card {
     @apply w-full;
+  }
+  
+  /* Mobile font size optimizations */
+  h1 {
+    @apply text-xl;
+  }
+  
+  h2 {
+    @apply text-lg;
+  }
+  
+  h3 {
+    @apply text-base;
+  }
+  
+  p, span, div {
+    @apply text-sm;
+  }
+  
+  .btn, button, input, select, textarea {
+    @apply text-xs;
+  }
+  
+  /* Mobile spacing optimizations */
+  .mobile-compact {
+    @apply p-1 m-1;
+  }
+  
+  /* Mobile content width limitation */
+  .mobile-content-container {
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 
@@ -234,4 +268,25 @@ p, h1, h2, h3, h4, h5, h6 {
   --spacing-md: 0.5rem;
   --spacing-lg: 0.75rem;
   --spacing-xl: 1rem;
+}
+
+/* Mobile card optimizations */
+@media (max-width: 640px) {
+  .card, .shadcn-card {
+    @apply p-2 m-1;
+  }
+  
+  /* Fix mobile tables */
+  table {
+    font-size: 0.75rem;
+  }
+  
+  th, td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  /* Sidebar optimization */
+  .collapsible-sidebar {
+    width: 240px;
+  }
 }

@@ -38,10 +38,10 @@ const Header = () => {
           <div className="flex items-center gap-2">
             {isMobile && (
               <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-                  <Handshake className="h-4 w-4 text-white" />
+                <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
+                  <Handshake className="h-3 w-3 text-white" />
                 </div>
-                <h1 className="text-lg font-bold">HireLink</h1>
+                <h1 className="text-base font-bold">HireLink</h1>
               </div>
             )}
           </div>
