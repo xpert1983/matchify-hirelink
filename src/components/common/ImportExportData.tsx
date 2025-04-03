@@ -5,30 +5,37 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { Upload, Download, FileText, Database, ChevronDown } from 'lucide-react';
+
 interface ImportExportDataProps {
   entityType: 'vacancies' | 'candidates' | 'matches';
   onImport?: (data: any) => void;
   onExport?: () => any;
+  className?: string;
 }
+
 const ImportExportData: React.FC<ImportExportDataProps> = ({
   entityType,
   onImport,
-  onExport
+  onExport,
+  className
 }) => {
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  
   const entityName = {
     vacancies: 'вакансий',
     candidates: 'кандидатов',
     matches: 'совпадений'
   }[entityType] || '';
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setImportFile(e.target.files[0]);
     }
   };
+  
   const handleImport = async () => {
     if (!importFile) {
       toast.error('Выберите файл для импорта');
@@ -36,7 +43,6 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
     }
     setIsImporting(true);
     try {
-      // Здесь будет логика импорта файла
       const reader = new FileReader();
       reader.onload = event => {
         try {
@@ -65,6 +71,7 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsImporting(false);
     }
   };
+  
   const handleExport = async (format: 'json' | 'csv' | 'excel') => {
     if (!onExport) return;
     setIsExporting(true);
@@ -78,14 +85,12 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
         mimeType = 'application/json';
         fileExtension = 'json';
       } else if (format === 'csv') {
-        // Простая реализация экспорта в CSV
         const headers = Object.keys(data[0]).join(',');
         const rows = data.map((item: any) => Object.values(item).join(','));
         content = [headers, ...rows].join('\n');
         mimeType = 'text/csv';
         fileExtension = 'csv';
       } else if (format === 'excel') {
-        // Для Excel нужна была бы библиотека, здесь заглушка
         content = JSON.stringify(data, null, 2);
         mimeType = 'application/json';
         fileExtension = 'json';
@@ -110,14 +115,17 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsExporting(false);
     }
   };
-  return <div className="flex items-center gap-2">
+  
+  return (
+    <div className={`flex items-center gap-2 ${className || ''}`}>
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight text-xs rounded-sm text-left">
+          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight text-xs rounded-sm text-left flex-1">
             <Upload className="h-4 w-4 mr-2" />
             Импорт
           </Button>
         </DialogTrigger>
+        
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Импорт данных {entityName}</DialogTitle>
@@ -151,12 +159,13 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" disabled={isExporting}>
+          <Button variant="outline" size="sm" disabled={isExporting} className="flex-1">
             <Download className="h-4 w-4 mr-2" />
             Экспорт
             <ChevronDown className="h-4 w-4 ml-2" />
           </Button>
         </DropdownMenuTrigger>
+        
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => handleExport('json')}>
             <FileText className="h-4 w-4 mr-2" />
@@ -172,6 +181,8 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>;
+    </div>
+  );
 };
+
 export default ImportExportData;

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import VacancyList from '@/components/vacancies/VacancyList';
@@ -264,24 +265,49 @@ const Vacancies = () => {
                 <h1 className="text-3xl font-bold tracking-tight">Вакансии</h1>
                 <p className="text-muted-foreground mt-1">Управление и отслеживание ваших открытых позиций.</p>
               </div>
-              <div className="flex items-center gap-2">
-                <ImportExportData 
-                  entityType="vacancies"
-                  onExport={handleExportData}
-                  onImport={handleImportData}
-                />
-                <Button className="bg-primary hover:bg-primary/90 text-white" onClick={handleCreateVacancy}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Добавить вакансию
-                </Button>
-              </div>
+              
+              {/* Мобильный вид - кнопки в два ряда */}
+              {isMobile ? (
+                <div className="flex flex-col gap-2 w-full">
+                  <Button className="bg-primary hover:bg-primary/90 text-white w-full" onClick={handleCreateVacancy}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Добавить вакансию
+                  </Button>
+                  <div className="flex items-center gap-2 w-full">
+                    <ImportExportData 
+                      entityType="vacancies"
+                      onExport={handleExportData}
+                      onImport={handleImportData}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <ImportExportData 
+                    entityType="vacancies"
+                    onExport={handleExportData}
+                    onImport={handleImportData}
+                  />
+                  <Button className="bg-primary hover:bg-primary/90 text-white" onClick={handleCreateVacancy}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Добавить вакансию
+                  </Button>
+                </div>
+              )}
             </div>
             
             <Tabs defaultValue="list" value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="mb-6">
-                <TabsTrigger value="list">Список вакансий</TabsTrigger>
-                <TabsTrigger value="analytics">Аналитика</TabsTrigger>
-                <TabsTrigger value="calendar">Календарь собеседований</TabsTrigger>
+                <TabsTrigger value="list" className="whitespace-normal text-[10px] sm:text-xs leading-tight min-h-[36px]">
+                  Список<br />вакансий
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="text-[10px] sm:text-xs">
+                  Аналитика
+                </TabsTrigger>
+                <TabsTrigger value="calendar" className="whitespace-normal text-[10px] sm:text-xs leading-tight min-h-[36px]">
+                  Календарь<br />собеседований
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="list" className="space-y-6 animate-fade-in">
