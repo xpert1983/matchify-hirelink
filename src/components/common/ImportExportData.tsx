@@ -5,14 +5,12 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { Upload, Download, FileText, Database, ChevronDown } from 'lucide-react';
-
 interface ImportExportDataProps {
   entityType: 'vacancies' | 'candidates' | 'matches';
   onImport?: (data: any) => void;
   onExport?: () => any;
   className?: string;
 }
-
 const ImportExportData: React.FC<ImportExportDataProps> = ({
   entityType,
   onImport,
@@ -23,19 +21,16 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
   const [importFile, setImportFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  
   const entityName = {
     vacancies: 'вакансий',
     candidates: 'кандидатов',
     matches: 'совпадений'
   }[entityType] || '';
-  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setImportFile(e.target.files[0]);
     }
   };
-  
   const handleImport = async () => {
     if (!importFile) {
       toast.error('Выберите файл для импорта');
@@ -71,7 +66,6 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsImporting(false);
     }
   };
-  
   const handleExport = async (format: 'json' | 'csv' | 'excel') => {
     if (!onExport) return;
     setIsExporting(true);
@@ -115,12 +109,10 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
       setIsExporting(false);
     }
   };
-  
-  return (
-    <div className={`flex items-center gap-2 ${className || ''}`}>
+  return <div className={`flex items-center gap-2 ${className || ''}`}>
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight text-xs rounded-sm text-left flex-1">
+          <Button variant="outline" size="sm" className="mx-0 px-0 font-extralight rounded-sm text-left flex-1 text-base">
             <Upload className="h-4 w-4 mr-2" />
             Импорт
           </Button>
@@ -181,8 +173,6 @@ const ImportExportData: React.FC<ImportExportDataProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
-  );
+    </div>;
 };
-
 export default ImportExportData;
